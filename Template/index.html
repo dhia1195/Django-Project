@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 
@@ -15,7 +16,7 @@
   <!-- 
     - custom css link
   -->
-  <link rel="stylesheet" href="./assets/css/style.css">
+<link rel="stylesheet" href="{% static 'assets/css/style.css' %}">
 
   <!-- 
     - google font link
@@ -55,7 +56,7 @@
         </a>
 
         <a href="#" class="logo">
-          <img src="./assets/images/logo.svg" alt="Tourly logo">
+          <img src="{% static 'assets/images/logo.svg' %}" alt="Tourly logo">
         </a>
 
         <div class="header-btn-group">
@@ -103,7 +104,7 @@
           <div class="navbar-top">
 
             <a href="#" class="logo">
-              <img src="./assets/images/logo-blue.svg" alt="Tourly logo">
+              <img src="{% static 'assets/images/logo-blue.svg' %}" alt="Tourly logo">
             </a>
 
             <button class="nav-close-btn" aria-label="Close Menu" data-nav-close-btn>
@@ -252,7 +253,7 @@
               <div class="popular-card">
 
                 <figure class="card-img">
-                  <img src="./assets/images/popular-1.jpg" alt="San miguel, italy" loading="lazy">
+                  <img src="{% static 'assets/images/popular-1.jpg' %}" alt="San Miguel, Italy" loading="lazy">
                 </figure>
 
                 <div class="card-content">
@@ -286,7 +287,7 @@
               <div class="popular-card">
 
                 <figure class="card-img">
-                  <img src="./assets/images/popular-2.jpg" alt="Burj khalifa, dubai" loading="lazy">
+                  <img src="{% static 'assets/images/popular-2.jpg' %}" alt="Burj Khalifa, Dubai" loading="lazy">
                 </figure>
 
                 <div class="card-content">
@@ -320,7 +321,7 @@
               <div class="popular-card">
 
                 <figure class="card-img">
-                  <img src="./assets/images/popular-3.jpg" alt="Kyoto temple, japan" loading="lazy">
+                  <img src="{% static 'assets/images/popular-3.jpg' %}" alt="Kyoto Temple, Japan" loading="lazy">
                 </figure>
 
                 <div class="card-content">
@@ -384,7 +385,7 @@
               <div class="package-card">
 
                 <figure class="card-banner">
-                  <img src="./assets/images/packege-1.jpg" alt="Experience The Great Holiday On Beach" loading="lazy">
+                  <img src="{% static 'assets/images/packege-1.jpg' %}" alt="Experience The Great Holiday On Beach" loading="lazy">
                 </figure>
 
                 <div class="card-content">
@@ -458,7 +459,7 @@
               <div class="package-card">
 
                 <figure class="card-banner">
-                  <img src="./assets/images/packege-2.jpg" alt="Summer Holiday To The Oxolotan River" loading="lazy">
+                  <img src="{% static 'assets/images/packege-2.jpg' %}" alt="Summer Holiday To The Oxolotan River" loading="lazy">
                 </figure>
 
                 <div class="card-content">
@@ -532,7 +533,7 @@
               <div class="package-card">
 
                 <figure class="card-banner">
-                  <img src="./assets/images/packege-3.jpg" alt="Santorini Island's Weekend Vacation" loading="lazy">
+                  <img src="{% static 'assets/images/packege-3.jpg' %}" alt="Santorini Island's Weekend Vacation" loading="lazy">
                 </figure>
 
                 <div class="card-content">
@@ -633,36 +634,37 @@
           <ul class="gallery-list">
 
             <li class="gallery-item">
-              <figure class="gallery-image">
-                <img src="./assets/images/gallery-1.jpg" alt="Gallery image">
-              </figure>
+                <figure class="gallery-image">
+                    <img src="{% static 'assets/images/gallery-1.jpg' %}" alt="Gallery image">
+                </figure>
             </li>
-
+        
             <li class="gallery-item">
-              <figure class="gallery-image">
-                <img src="./assets/images/gallery-2.jpg" alt="Gallery image">
-              </figure>
+                <figure class="gallery-image">
+                    <img src="{% static 'assets/images/gallery-2.jpg' %}" alt="Gallery image">
+                </figure>
             </li>
-
+        
             <li class="gallery-item">
-              <figure class="gallery-image">
-                <img src="./assets/images/gallery-3.jpg" alt="Gallery image">
-              </figure>
+                <figure class="gallery-image">
+                    <img src="{% static 'assets/images/gallery-3.jpg' %}" alt="Gallery image">
+                </figure>
             </li>
-
+        
             <li class="gallery-item">
-              <figure class="gallery-image">
-                <img src="./assets/images/gallery-4.jpg" alt="Gallery image">
-              </figure>
+                <figure class="gallery-image">
+                    <img src="{% static 'assets/images/gallery-4.jpg' %}" alt="Gallery image">
+                </figure>
             </li>
-
+        
             <li class="gallery-item">
-              <figure class="gallery-image">
-                <img src="./assets/images/gallery-5.jpg" alt="Gallery image">
-              </figure>
+                <figure class="gallery-image">
+                    <img src="{% static 'assets/images/gallery-5.jpg' %}" alt="Gallery image">
+                </figure>
             </li>
-
-          </ul>
+        
+        </ul>
+        
 
         </div>
       </section>
@@ -714,7 +716,7 @@
         <div class="footer-brand">
 
           <a href="#" class="logo">
-            <img src="./assets/images/logo.svg" alt="Tourly logo">
+            <img src="{% static 'assets/images/logo.svg' %}" alt="Tourly logo">
           </a>
 
           <p class="footer-text">
@@ -821,7 +823,7 @@
   <!-- 
     - custom js link
   -->
-  <script src="./assets/js/script.js"></script>
+  <script src="{% static 'assets/js/script.js' %}"></script>
 
   <!-- 
     - ionicon link

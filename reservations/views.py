@@ -1,3 +1,5 @@
 from django.shortcuts import render
 
-# Create your views here.
+def front_view(request):
+    # Your view logic here
+    return render(request, 'index.html')
