@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from reservations.views import front_view  # Assurez-vous que le chemin correspond à votre vue
+from reservations.views import front_view  # Make sure this path matches your view
 
 urlpatterns = [
     path('admin/', admin.site.urls),

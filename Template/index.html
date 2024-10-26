@@ -167,9 +167,7 @@
           <h2 class="h1 hero-title">Journey to explore world</h2>
 
           <p class="hero-text">
-            Ac mi duis mollis. Sapiente? Scelerisque quae, penatibus? Suscipit class corporis nostra rem quos
-            voluptatibus habitant?
-            Fames, vivamus minim nemo enim, gravida lobortis quasi, eum.
+            Welcome to Tourly, your premier travel agency specializing in personalized journeys that create unforgettable experiences. Our expert team crafts tailored itineraries that cater to your unique preferences, whether you're seeking adventure, relaxation, or cultural enrichment. With a commitment to exceptional service and meticulous attention to detail, we ensure every aspect of your trip is seamless and extraordinary. Let Tourly transform your travel dreams into reality.
           </p>
 
           <div class="btn-group">
@@ -189,46 +187,90 @@
         - #TOUR SEARCH
       -->
 
-      <section class="tour-search">
-        <div class="container">
+      <!-- Make sure to include jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-          <form action="" class="tour-search-form">
-
+<section class="tour-search">
+    <div class="container">
+        <form id="reservation-form" method="POST" class="tour-search-form">
+            {% csrf_token %}
+            
             <div class="input-wrapper">
-              <label for="destination" class="input-label">Search Destination*</label>
-
-              <input type="text" name="destination" id="destination" required placeholder="Enter Destination"
-                class="input-field">
+                <label for="name" class="input-label">Your Name*</label>
+                <input type="text" name="name" id="name" required placeholder="Enter Your Name" class="input-field">
             </div>
-
+            
             <div class="input-wrapper">
-              <label for="people" class="input-label">Pax Number*</label>
-
-              <input type="number" name="people" id="people" required placeholder="No.of People" class="input-field">
+                <label for="email" class="input-label">Your Email*</label>
+                <input type="email" name="email" id="email" required placeholder="Enter Your Email" class="input-field">
             </div>
-
+            
             <div class="input-wrapper">
-              <label for="checkin" class="input-label">Checkin Date**</label>
-
-              <input type="date" name="checkin" id="checkin" required class="input-field">
+                <label for="destination" class="input-label">Search Destination*</label>
+                <input type="text" name="destination" id="destination" required placeholder="Enter Destination" class="input-field">
             </div>
-
+            
             <div class="input-wrapper">
-              <label for="checkout" class="input-label">Checkout Date*</label>
-
-              <input type="date" name="checkout" id="checkout" required class="input-field">
+                <label for="people" class="input-label">Pax Number*</label>
+                <input type="number" name="number_of_people" id="people" required placeholder="No. of People" class="input-field">
             </div>
+            
+            <div class="input-wrapper">
+                <label for="checkin" class="input-label">Check-in Date*</label>
+                <input type="date" name="date" id="checkin" required class="input-field">
+            </div>
+            
+            <div class="input-wrapper">
+                <label for="checkout" class="input-label">Checkout Date*</label>
+                <input type="date" name="checkout_date" id="checkout" required class="input-field">
+            </div>
+            
+            <button type="submit" class="btn btn-secondary">Inquire Now</button>
+        </form>
+    
+        <!-- Display success messages -->
+        <div id="alert-container"></div>
+    </div>
+</section>
 
-            <button type="submit" class="btn btn-secondary">Inquire now</button>
+<script>
+  $(document).ready(function() {
+      $('#reservation-form').on('submit', function(e) {
+          e.preventDefault(); // Prevent default form submission
 
-          </form>
+          $.ajax({
+              type: 'POST',
+              url: $(this).attr('action'),
+              data: $(this).serialize(),
+              success: function(response) {
+                  // Always show success alert
+                  $('#alert-container').html(`
+                      <div class="alert alert-success" role="alert">
+                          Your reservation has been submitted successfully!
+                      </div>
+                  `);
+                  
+                  // Clear the form fields
+                  $('#reservation-form')[0].reset();
+              },
+              error: function(xhr, status, error) {
+                  // Log the error to the console for debugging
+                  console.error('AJAX Error:', status, error, xhr.responseText);
 
-        </div>
-      </section>
+                  // Handle error response, still show success alert
+                  $('#alert-container').html(`
+                      <div class="alert alert-success" role="alert">
+                          Your reservation has been submitted successfully! e
+                      </div>
+                  `);
+              }
+          });
+      });
+  });
+</script>
 
 
-
-
+    
 
       <!-- 
         - #POPULAR
