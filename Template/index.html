@@ -188,87 +188,150 @@
       -->
 
       <!-- Make sure to include jQuery -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+      <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-<section class="tour-search">
-    <div class="container">
-        <form id="reservation-form" method="POST" class="tour-search-form">
-            {% csrf_token %}
+      <section class="tour-search">
+        <div class="container">
+            <h2 class="section-title">Book Your Tour</h2> <!-- Added section title -->
+            <form id="reservation-form" method="POST" class="tour-search-form">
+                {% csrf_token %}
+                
+                <div class="input-wrapper">
+                    <label for="name" class="input-label">Your Name*</label>
+                    <input type="text" name="name" id="name" required placeholder="Enter Your Name" class="input-field" aria-label="Your Name">
+                </div>
+                
+                <div class="input-wrapper">
+                    <label for="email" class="input-label">Your Email*</label>
+                    <input type="email" name="email" id="email" required placeholder="Enter Your Email" class="input-field" aria-label="Your Email">
+                </div>
+                
+                <div class="input-wrapper">
+                    <label for="destination" class="input-label">Search Destination*</label>
+                    <input type="text" name="destination" id="destination" required placeholder="Enter Destination" class="input-field" aria-label="Search Destination">
+                </div>
+                
+                <div id="destination-image" class="image-preview"></div>  <!-- Added class for styling -->
             
-            <div class="input-wrapper">
-                <label for="name" class="input-label">Your Name*</label>
-                <input type="text" name="name" id="name" required placeholder="Enter Your Name" class="input-field">
-            </div>
-            
-            <div class="input-wrapper">
-                <label for="email" class="input-label">Your Email*</label>
-                <input type="email" name="email" id="email" required placeholder="Enter Your Email" class="input-field">
-            </div>
-            
-            <div class="input-wrapper">
-                <label for="destination" class="input-label">Search Destination*</label>
-                <input type="text" name="destination" id="destination" required placeholder="Enter Destination" class="input-field">
-            </div>
-            
-            <div class="input-wrapper">
-                <label for="people" class="input-label">Pax Number*</label>
-                <input type="number" name="number_of_people" id="people" required placeholder="No. of People" class="input-field">
-            </div>
-            
-            <div class="input-wrapper">
-                <label for="checkin" class="input-label">Check-in Date*</label>
-                <input type="date" name="date" id="checkin" required class="input-field">
-            </div>
-            
-            <div class="input-wrapper">
-                <label for="checkout" class="input-label">Checkout Date*</label>
-                <input type="date" name="checkout_date" id="checkout" required class="input-field">
-            </div>
-            
-            <button type="submit" class="btn btn-secondary">Inquire Now</button>
-        </form>
+                <div class="input-wrapper">
+                    <label for="people" class="input-label">Max Number*</label>
+                    <input type="number" name="number_of_people" id="people" required placeholder="No. of People" class="input-field" aria-label="Max Number of People">
+                </div>
+                
+                <div class="input-wrapper">
+                    <label for="checkin" class="input-label">Check-in Date*</label>
+                    <input type="date" name="date" id="checkin" required class="input-field" aria-label="Check-in Date">
+                </div>
+                
+                <div class="input-wrapper">
+                    <label for="checkout" class="input-label">Checkout Date*</label>
+                    <input type="date" name="checkout_date" id="checkout" required class="input-field" aria-label="Checkout Date">
+                </div>
+                
+                <div class="button-group"> <!-- Grouped buttons for better layout -->
+                    <button type="button" id="generate-image" class="btn btn-primary">Generate Image</button>
+                    <button type="submit" class="btn btn-secondary">Inquire Now</button>
+                </div>
+            </form>
+        
+            <!-- Display success messages -->
+            <div id="alert-container"></div>
+        </div>
+    </section>
     
-        <!-- Display success messages -->
-        <div id="alert-container"></div>
-    </div>
-</section>
-
-<script>
-  $(document).ready(function() {
-      $('#reservation-form').on('submit', function(e) {
-          e.preventDefault(); // Prevent default form submission
-
-          $.ajax({
-              type: 'POST',
-              url: $(this).attr('action'),
-              data: $(this).serialize(),
-              success: function(response) {
-                  // Always show success alert
-                  $('#alert-container').html(`
-                      <div class="alert alert-success" role="alert">
-                          Your reservation has been submitted successfully!
-                      </div>
-                  `);
-                  
-                  // Clear the form fields
-                  $('#reservation-form')[0].reset();
-              },
-              error: function(xhr, status, error) {
-                  // Log the error to the console for debugging
-                  console.error('AJAX Error:', status, error, xhr.responseText);
-
-                  // Handle error response, still show success alert
-                  $('#alert-container').html(`
-                      <div class="alert alert-success" role="alert">
-                          Your reservation has been submitted successfully! e
-                      </div>
-                  `);
-              }
-          });
-      });
-  });
-</script>
-
+    <style>
+        /* Add styles for professionalism */
+        .section-title {
+            text-align: center;
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+    
+        .input-wrapper {
+            margin-bottom: 15px;
+        }
+    
+        .image-preview {
+            margin-top: 15px;
+            text-align: center;
+        }
+    
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+    
+        .alert {
+            margin-top: 20px;
+            text-align: center;
+        }
+    </style>
+    
+    <script>
+    $(document).ready(function() {
+        // Handle image generation on button click
+        $('#generate-image').on('click', function() {
+            var destination = $('#destination').val();
+            if (destination.length > 0) {
+                $.ajax({
+                    type: 'GET',
+                    url: '/get-image-for-destination/',
+                    data: { destination: destination },
+                    success: function(response) {
+                        if (response.image_data) {
+                            $('#destination-image').html(`
+                                <img src="data:image/png;base64,${response.image_data}" 
+                                     alt="Image of ${destination}" 
+                                     style="width: 200px; border: 1px solid #ccc; border-radius: 5px;">
+                            `);
+                        } else {
+                            $('#destination-image').html(`<p>No image found for "${destination}".</p>`);
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error fetching image:', status, error);
+                        $('#destination-image').html(`<p>Error fetching image. Please try again.</p>`);
+                    }
+                });
+            } else {
+                alert('Please enter a destination first.');
+            }
+        });
+    
+        // Handle form submission
+        $('#reservation-form').on('submit', function(e) {
+            e.preventDefault();
+            var form = $(this);
+            
+            $.ajax({
+                type: 'POST',
+                url: form.attr('action'),
+                data: form.serialize(),
+                success: function(response) {
+                    $('#alert-container').html(`
+                        <div class="alert alert-success" role="alert">
+                            Your reservation has been submitted successfully!
+                        </div>
+                    `);
+                    
+                    form[0].reset();
+                    $('#destination-image').empty(); // Clear the image after submission
+                },
+                error: function(xhr, status, error) {
+                    console.error('AJAX Error:', status, error, xhr.responseText);
+                    $('#alert-container').html(`
+                        <div class="alert alert-danger" role="alert">
+                            There was an error submitting your reservation! Please try again.
+                        </div>
+                    `);
+                }
+            });
+        });
+    });
+    </script>
+    
+    
 
     
 
