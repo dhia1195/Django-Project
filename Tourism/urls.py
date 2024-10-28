@@ -16,7 +16,15 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from django.conf import settings
+from django.conf.urls.static import static
+from reservations.views import front_view, get_image_for_destination  # Ensure both views are imported
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+        path('front/', front_view, name='front'),  # Ajoutez cette ligne pour votre vue
+    path('get-image-for-destination/', get_image_for_destination, name='get_image_for_destination'),
+
 ]
+if settings.DEBUG:  # Ensure this is only done in development mode
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -3,5 +3,6 @@ from .models import Reservation
 
 @admin.register(Reservation)
 class ReservationAdmin(admin.ModelAdmin):
-    list_display = ('name', 'email', 'date', 'number_of_people')  # Columns to display in the list view
-    search_fields = ('name', 'email')  # Enable search by name or email
+    list_display = ('name', 'email', 'destination', 'date', 'checkout_date', 'number_of_people', 'created_at')  # Updated to include new fields
+    search_fields = ('name', 'email', 'destination')  # Enable search by name, email, and destination
+    list_filter = ('date', 'number_of_people')  # Optional: add filters for date and number of people
