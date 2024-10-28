@@ -179,15 +179,6 @@
         </div>
       </section>
 
-
-
-
-
-      <!-- 
-        - #TOUR SEARCH
-      -->
-
-      <!-- Make sure to include jQuery -->
       <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
       <section class="tour-search">
@@ -233,14 +224,11 @@
                     <button type="submit" class="btn btn-secondary">Inquire Now</button>
                 </div>
             </form>
-        
-            <!-- Display success messages -->
             <div id="alert-container"></div>
         </div>
     </section>
     
     <style>
-        /* Add styles for professionalism */
         .section-title {
             text-align: center;
             font-size: 2em;
@@ -267,7 +255,6 @@
             text-align: center;
         }
     </style>
-    
     <script>
     $(document).ready(function() {
         // Handle image generation on button click
@@ -298,9 +285,7 @@
                 alert('Please enter a destination first.');
             }
         });
-    
-        // Handle form submission
-        $('#reservation-form').on('submit', function(e) {
+            $('#reservation-form').on('submit', function(e) {
             e.preventDefault();
             var form = $(this);
             
@@ -330,14 +315,6 @@
         });
     });
     </script>
-    
-    
-
-    
-
-      <!-- 
-        - #POPULAR
-      -->
 
       <section class="popular" id="destination">
         <div class="container">
