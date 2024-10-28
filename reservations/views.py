@@ -8,6 +8,10 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from .models import Reservation  # Ensure the correct import path for your Reservation model
 from django.conf import settings
+from django.core.serializers import serialize
+from django.http import JsonResponse
+from .models import Reservation
+from django.views.decorators.csrf import csrf_exempt
 
 API_URL = "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-2-1"
 HEADERS = {"Authorization": "Bearer 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"}
@@ -69,7 +73,27 @@ def front_view(request):
                 return JsonResponse({'success': False, 'message': str(e)})
 
     return render(request, 'index.html')
+def get_reservations(request):
+    if request.method == 'GET' and request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        reservations = Reservation.objects.all()
+        reservations_data = serialize('json', reservations)
+        return JsonResponse({'reservations': reservations_data}, safe=False)
+    return JsonResponse({'error': 'Invalid request'}, status=400)
 
+@csrf_exempt  # Temporarily disable CSRF protection for testing
+def delete_reservation(request, reservation_id):
+    if request.method == 'POST':
+        try:
+            reservation = Reservation.objects.get(id=reservation_id)
+            reservation.delete()
+            return JsonResponse({'success': True, 'message': 'Reservation deleted successfully.'})
+        except Reservation.DoesNotExist:
+            return JsonResponse({'success': False, 'message': 'Reservation not found.'}, status=404)
+        except Exception as e:
+            return JsonResponse({'success': False, 'message': str(e)}, status=500)
+    else:
+        return JsonResponse({'success': False, 'message': 'Invalid request method.'}, status=400)
+    
 def get_image_for_destination(request):
     destination = request.GET.get('destination')
 

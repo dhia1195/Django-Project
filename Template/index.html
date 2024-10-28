@@ -26,6 +26,14 @@
   <link
     href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&family=Poppins:wght@400;500;600;700&display=swap"
     rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- jQuery and Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<meta name="csrf-token" content="{{ csrf_token }}">
+
 </head>
 
 <body id="top">
@@ -315,6 +323,117 @@
         });
     });
     </script>
+<!-- Show My Reservations Button -->
+<button id="showReservationsBtn" class="btn btn-primary">Show My Reservations</button>
+
+<!-- Bootstrap Modal -->
+<div class="modal fade" id="reservationModal" tabindex="-1" role="dialog" aria-labelledby="reservationModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="reservationModalLabel">Your Reservations</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <ul id="reservationList" class="list-group"></ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Styling for Modal -->
+<style>
+.modal { display: none; position: fixed; /* additional styling here */ }
+.modal-content { /* styling for modal content */ }
+.close { cursor: pointer; }
+</style>
+
+<!-- JavaScript for Modal and AJAX Request -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const showReservationsBtn = document.getElementById("showReservationsBtn");
+    const reservationList = document.getElementById("reservationList");
+    const reservationModal = new bootstrap.Modal(document.getElementById('reservationModal'));
+
+    // Function to load reservations and display the modal
+    showReservationsBtn.onclick = function () {
+        console.log("Show Reservations Button Clicked");
+        fetch('/get-reservations/', { headers: { 'x-requested-with': 'XMLHttpRequest' } })
+            .then(response => {
+                console.log("Response received:", response);
+                return response.json();
+            })
+            .then(data => {
+                console.log("Data received:", data);
+                if (data.reservations) {
+                    reservationList.innerHTML = ''; // Clear any existing list items
+                    const reservations = JSON.parse(data.reservations);
+                    console.log("Parsed reservations:", reservations);
+                    reservations.forEach(reservation => {
+                        const li = document.createElement("li");
+                        li.className = "list-group-item d-flex justify-content-between align-items-center";
+                        li.innerText = `Name: ${reservation.fields.name}, Destination: ${reservation.fields.destination}`;
+
+                        // Create delete button
+                        const deleteBtn = document.createElement("button");
+                        deleteBtn.className = "btn btn-danger btn-sm ml-2";
+                        deleteBtn.innerText = "Delete";
+                        deleteBtn.onclick = function () {
+                            deleteReservation(reservation.pk, li);  // Pass ID and element
+                        };
+
+                        // Append the delete button to the list item
+                        li.appendChild(deleteBtn);
+                        reservationList.appendChild(li);
+                    });
+                    reservationModal.show(); // Show the modal
+                } else {
+                    console.log("No reservations found.");
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching reservations:', error);
+            });
+    };
+    function getCSRFToken() {
+    return document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+}
+
+    // Function to handle deletion
+    function deleteReservation(id, element) {
+    fetch(`/delete-reservation/${id}/`, {
+        method: 'POST',  // Use POST instead of DELETE
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCSRFToken(),  // Fetch CSRF token from meta tag
+        },
+        body: JSON.stringify({ action: 'delete' })  // Include action as 'delete'
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            console.log(`Reservation ${id} deleted successfully`);
+            reservationList.removeChild(element); // Remove the list item from the DOM
+        } else {
+            console.error(`Failed to delete reservation ${id}: ${data.message}`);
+        }
+    })
+    .catch(error => {
+        console.error('Error deleting reservation:', error);
+    });
+}
+
+
+});
+
+
+</script>
 
       <section class="popular" id="destination">
         <div class="container">
