@@ -4,13 +4,26 @@ import requests
 import base64  # Ensure base64 is imported
 from PIL import Image
 from django.http import JsonResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect 
 from django.contrib import messages
 from .models import Reservation  # Ensure the correct import path for your Reservation model
 from django.conf import settings
+from django.core.serializers import serialize
+from django.http import JsonResponse
+from .models import Reservation
+from django.views.decorators.csrf import csrf_exempt
+import json
+from django.views.decorators.http import require_POST,require_GET
+from django.core.serializers import serialize
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.shortcuts import get_object_or_404
+import json
+import logging
 
+logger = logging.getLogger(__name__)
 API_URL = "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-2-1"
-HEADERS = {"Authorization": "Bearer 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"}
+HEADERS = {"Authorization": "Bearer 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"}
 
 def front_view(request):
     if request.method == 'POST':
@@ -70,6 +83,56 @@ def front_view(request):
 
     return render(request, 'index.html')
 
+
+def get_reservations(request):
+    if request.method == 'GET' and request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        # Serialize only the fields you need for each reservation
+        reservations = Reservation.objects.all().values(
+            'id', 'name', 'email', 'destination', 'number_of_people', 'date', 'checkout_date'
+        )
+        return JsonResponse({'reservations': list(reservations)}, safe=False)
+    return JsonResponse({'error': 'Invalid request'}, status=400)
+
+@csrf_exempt
+@require_POST
+def update_reservation(request, reservation_id):
+    try:
+        data = json.loads(request.body)
+        reservation = Reservation.objects.get(id=reservation_id)
+        
+        # Update fields and log the data for debugging
+        reservation.name = data.get('name', reservation.name)
+        reservation.email = data.get('email', reservation.email)
+        reservation.destination = data.get('destination', reservation.destination)
+        reservation.number_of_people = data.get('number_of_people', reservation.number_of_people)
+        reservation.date = data.get('date', reservation.date)
+        reservation.checkout_date = data.get('checkout_date', reservation.checkout_date)
+        
+        reservation.save()  # Attempt to save to DB
+        logger.info(f"Updated reservation {reservation_id} successfully.")
+        
+        return JsonResponse({'success': True, 'message': 'Reservation updated successfully.'})
+    except Reservation.DoesNotExist:
+        logger.error(f"Reservation with id {reservation_id} does not exist.")
+        return JsonResponse({'success': False, 'message': 'Reservation not found.'}, status=404)
+    except Exception as e:
+        logger.error(f"Error updating reservation {reservation_id}: {str(e)}")
+        return JsonResponse({'success': False, 'message': str(e)}, status=500)
+
+@csrf_exempt  # Temporarily disable CSRF protection for testing
+def delete_reservation(request, reservation_id):
+    if request.method == 'DELETE':
+        try:
+            reservation = Reservation.objects.get(id=reservation_id)
+            reservation.delete()
+            return JsonResponse({'success': True, 'message': 'Reservation deleted successfully.'})
+        except Reservation.DoesNotExist:
+            return JsonResponse({'success': False, 'message': 'Reservation not found.'}, status=404)
+        except Exception as e:
+            return JsonResponse({'success': False, 'message': str(e)}, status=500)
+    else:
+        return JsonResponse({'success': False, 'message': 'Invalid request method.'}, status=400)
+    
 def get_image_for_destination(request):
     destination = request.GET.get('destination')
 
