@@ -13,9 +13,7 @@ from django.http import JsonResponse
 from .models import Reservation
 from django.views.decorators.csrf import csrf_exempt
 import json
-from activite.models import Activite
-from django.views.decorators.http import require_POST,require_GET
-from django.core.serializers import serialize
+from django.views.decorators.http import require_POST
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
@@ -94,7 +92,7 @@ def get_reservations(request):
     if request.method == 'GET' and request.headers.get('x-requested-with') == 'XMLHttpRequest':
         # Serialize only the fields you need for each reservation
         reservations = Reservation.objects.all().values(
-            'id', 'name', 'email', 'destination', 'number_of_people', 'date', 'checkout_date'
+            'id', 'name', 'email', 'destination', 'number_of_people', 'date', 'checkout_date', 'activite__nom'
         )
         return JsonResponse({'reservations': list(reservations)}, safe=False)
     return JsonResponse({'error': 'Invalid request'}, status=400)
@@ -113,6 +111,7 @@ def update_reservation(request, reservation_id):
         reservation.number_of_people = data.get('number_of_people', reservation.number_of_people)
         reservation.date = data.get('date', reservation.date)
         reservation.checkout_date = data.get('checkout_date', reservation.checkout_date)
+        
         
         reservation.save()  # Attempt to save to DB
         logger.info(f"Updated reservation {reservation_id} successfully.")

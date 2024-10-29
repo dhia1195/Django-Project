@@ -18,6 +18,7 @@
   -->
 <link rel="stylesheet" href="{% static 'assets/css/style.css' %}">
 
+  
   <!-- 
     - google font link
   -->
@@ -444,7 +445,8 @@
                                 <strong>Destination:</strong> ${reservation.destination}<br>
                                 <strong>Number of People:</strong> ${reservation.number_of_people}<br>
                                 <strong>Date:</strong> ${new Date(reservation.date).toLocaleDateString()}<br>
-                                <strong>Checkout Date:</strong> ${new Date(reservation.checkout_date).toLocaleDateString()}
+                                <strong>Checkout Date:</strong> ${new Date(reservation.checkout_date).toLocaleDateString()}<br>
+                                <strong>Activity:</strong> ${reservation.activite__nom || 'Not provided'} <!-- Use 'activite__nom' instead of 'activite__name' -->
                             </div>
                         `;
                         
