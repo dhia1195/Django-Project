@@ -292,6 +292,25 @@
             margin-top: 20px;
             text-align: center;
         }
+        .card-tags {
+            margin-top: 10px;
+        }
+
+        .card-tags .tag {
+            display: inline-block;
+            background-color: #e0f7fa; /* Light blue background */
+            color: #00796b; /* Dark teal text */
+            font-size: 0.875rem;
+            font-weight: 500;
+            padding: 5px 10px;
+            border-radius: 15px;
+            margin-right: 5px;
+            margin-bottom: 5px;
+        }
+
+        .card-tags .tag:hover {
+            background-color: #b2ebf2; /* Slightly darker on hover */
+        }
     </style>
     <script>
     $(document).ready(function() {
@@ -701,7 +720,7 @@ function deleteReservation(reservationId, listItem) {
             <ul class="package-list">
                 {% for activity in activities %}
                 <li>
-                    <div class="package-card">
+                    <div class="package-card" data-activity-id="{{ activity.id }}" data-price="{{ activity.cout }}">
                         <figure class="card-banner">
                             <img src="{{ activity.image.url }}" alt="{{ activity.nom }}" loading="lazy">
                         </figure>
@@ -709,15 +728,20 @@ function deleteReservation(reservationId, listItem) {
                         <div class="card-content">
                             <h3 class="h3 card-title">{{ activity.nom }}</h3>
                             <p class="card-text">{{ activity.adresse }}</p>
+                            {# <p class="card-caption">{{ activity.caption }}</p> #}
+    
+                            <!-- Tags Section -->
+                            <div class="card-tags" id="tags-{{ activity.id }}">
+                                <!-- Tags will be dynamically populated here -->
+                            </div>
+    
                             <ul class="card-meta-list">
-                              <li class="card-meta-item">
-                                <div class="meta-box">
-                                    <ion-icon name="time"></ion-icon>
-                                    <p class="text">
-                                        {{ activity.duree }} {{ activity.duree|pluralize:"day,days" }}
-                                    </p>
-                                </div>
-                            </li>
+                                <li class="card-meta-item">
+                                    <div class="meta-box">
+                                        <ion-icon name="time"></ion-icon>
+                                        <p class="text">{{ activity.duree }} {{ activity.duree|pluralize:"day,days" }}</p>
+                                    </div>
+                                </li>
                                 <li class="card-meta-item">
                                     <div class="meta-box">
                                         <ion-icon name="people"></ion-icon>
@@ -735,7 +759,7 @@ function deleteReservation(reservationId, listItem) {
     
                         <div class="card-price">
                             <div class="wrapper">
-                                <p class="reviews">(0 reviews)</p>  <!-- Replace with dynamic reviews if needed -->
+                                <p class="reviews">(0 reviews)</p> <!-- Replace with dynamic reviews if needed -->
                                 <div class="card-rating">
                                     <ion-icon name="star"></ion-icon>
                                     <ion-icon name="star"></ion-icon>
@@ -756,8 +780,76 @@ function deleteReservation(reservationId, listItem) {
             </ul>
         </div>
     </section>
-    
-  
+
+    <script>
+document.addEventListener("DOMContentLoaded", function() {
+    const packageCards = document.querySelectorAll(".package-card");
+    const baseUrl = window.location.origin; // Get the base URL of the site
+
+    packageCards.forEach(card => {
+        const activityId = card.getAttribute("data-activity-id");
+        const imageUrl = card.querySelector("img").getAttribute("src"); // Prepend base URL
+        let relativeImagePath = imageUrl.replace(/^\/+/, '');
+        const activityName = card.querySelector(".card-title").textContent;
+        const priceElement = card.querySelector(".price");
+        const priceText = priceElement ? priceElement.textContent : ""; // Get the full text
+        const price = priceText.replace('€', '').trim(); // Remove Euro sign and trim whitespace
+        
+        // Take only the first part before any spaces
+        const cleanedPrice = price.split(' ')[0].trim(); // Get price directly from data attribute
+
+        // Debugging output
+        console.log(`Activity ID: ${activityId}`);
+        console.log(`Image URL: ${imageUrl}`);
+        console.log(`Activity Name: ${activityName}`);
+        console.log(`Price: ${price}`); // Log price before calling trim
+        console.log('Relative Image Path:', relativeImagePath);
+        
+        if (relativeImagePath.startsWith('media/')) {
+          relativeImagePath = relativeImagePath.replace('media/', '');
+        }
+
+        console.log(`/generate-activity-tags/?image_path=${encodeURIComponent(relativeImagePath)}&activity_name=${encodeURIComponent(card.querySelector(".card-title").textContent)}&price=${encodeURIComponent(cleanedPrice)}`)
+        
+
+        if (price) { // Check if price is not null or undefined
+            const trimmedPrice = price.trim(); // Only trim if price is valid
+
+            // Fetch tags for each activity
+          fetch(`/generate-activity-tags/?image_path=${encodeURIComponent(relativeImagePath)}&activity_name=${encodeURIComponent(card.querySelector(".card-title").textContent)}&price=${encodeURIComponent(cleanedPrice)}`)
+            .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log(data); 
+                    const tagsContainer = document.getElementById(`tags-${activityId}`);
+                    if (data.tags) {
+                        tagsContainer.innerHTML = "";  // Clear any existing tags
+                        data.tags.forEach(tag => {
+                            const tagElement = document.createElement("span");
+                            tagElement.classList.add("tag");
+                            tagElement.textContent = tag;
+                            tagsContainer.appendChild(tagElement);
+                        });
+                    } else {
+                        tagsContainer.textContent = "No tags found";
+                    }
+                })
+                .catch(error => console.error('Error fetching tags:', error));
+        } else {
+            console.error(`Price is missing for Activity ID: ${activityId}`);
+        }
+    });
+});
+</script>
+
+
+
+
+
 
       <!-- 
         - #GALLERY

@@ -20,8 +20,6 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
 import logging
-from activite.models import Activite  # Import the Activite model
-
 
 
 
@@ -86,7 +84,7 @@ def front_view(request):
             if request.headers.get('x-requested-with') == 'XMLHttpRequest':
                 return JsonResponse({'success': False, 'message': str(e)})
             
-    activities = Activite.objects.all()  # Fetch all activities
+    activities = Activite.get_activities_with_captions()  # Fetch all activities
     return render(request, 'index.html', {'activities': activities})
 
 
