@@ -12,9 +12,11 @@ from django.core.serializers import serialize
 from django.http import JsonResponse
 from .models import Reservation
 from django.views.decorators.csrf import csrf_exempt
+import json
+import re
 
 API_URL = "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-2-1"
-HEADERS = {"Authorization": "Bearer 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"}
+HEADERS = {"Authorization": "Bearer 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"}
 
 def front_view(request):
     if request.method == 'POST':
@@ -73,12 +75,70 @@ def front_view(request):
                 return JsonResponse({'success': False, 'message': str(e)})
 
     return render(request, 'index.html')
+
+
 def get_reservations(request):
     if request.method == 'GET' and request.headers.get('x-requested-with') == 'XMLHttpRequest':
         reservations = Reservation.objects.all()
         reservations_data = serialize('json', reservations)
         return JsonResponse({'reservations': reservations_data}, safe=False)
     return JsonResponse({'error': 'Invalid request'}, status=400)
+
+@csrf_exempt  # Exempt CSRF validation for simplicity; handle properly in production
+def update_reservation(request, reservation_id):
+    if request.method == 'POST':
+        try:
+            # Parse the incoming data
+            data = json.loads(request.body)
+
+            # Attempt to retrieve the reservation directly
+            reservation = Reservation.objects.filter(id=reservation_id).first()
+            if not reservation:
+                return JsonResponse({'success': False, 'message': 'Reservation not found.'}, status=404)
+
+            # Validate incoming data
+            name = data.get('name')
+            email = data.get('email')
+            destination = data.get('destination')
+            number_of_people = data.get('number_of_people')
+            date = data.get('date')
+            checkout_date = data.get('checkout_date')
+
+            # Perform validation
+            errors = {}
+            if not name:
+                errors['name'] = 'Name is required.'
+            if email and not re.match(r"[^@]+@[^@]+\.[^@]+", email):
+                errors['email'] = 'Invalid email format.'
+            if number_of_people is not None and (not isinstance(number_of_people, int) or number_of_people <= 0):
+                errors['number_of_people'] = 'Number of people must be a positive integer.'
+            if not date:
+                errors['date'] = 'Date is required.'
+            if not checkout_date:
+                errors['checkout_date'] = 'Checkout date is required.'
+
+            if errors:
+                return JsonResponse({'success': False, 'message': 'Validation errors.', 'errors': errors}, status=400)
+
+            # Update the reservation fields directly
+            reservation.name = name
+            reservation.email = email
+            reservation.destination = destination
+            reservation.number_of_people = number_of_people
+            reservation.date = date
+            reservation.checkout_date = checkout_date
+
+            # Save the updated reservation
+            reservation.save()
+
+            return JsonResponse({'success': True, 'message': 'Reservation updated successfully.'})
+
+        except json.JSONDecodeError:
+            return JsonResponse({'success': False, 'message': 'Invalid JSON.'})
+        except Exception as e:
+            return JsonResponse({'success': False, 'message': f'Error: {str(e)}'})
+
+    return JsonResponse({'success': False, 'message': 'Invalid request method.'})
 
 @csrf_exempt  # Temporarily disable CSRF protection for testing
 def delete_reservation(request, reservation_id):

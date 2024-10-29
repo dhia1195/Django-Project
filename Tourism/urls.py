@@ -27,6 +27,8 @@ urlpatterns = [
     path('get-image-for-destination/', get_image_for_destination, name='get_image_for_destination'),  # Route for image generation
     path('get-reservations/', get_reservations, name='get_reservations'),  # Route for fetching reservations
     path('delete-reservation/<int:reservation_id>/', views.delete_reservation, name='delete_reservation'),
+    path('update-reservation/<int:reservation_id>/', views.update_reservation, name='update_reservation'),
+
 
 
 ]
