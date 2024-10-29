@@ -19,6 +19,7 @@ from django.views.decorators.csrf import csrf_exempt
 import json
 import logging
 from activite.models import Activite  # Import the Activite model
+import google.generativeai as genai
 
 
 
@@ -26,6 +27,12 @@ from activite.models import Activite  # Import the Activite model
 logger = logging.getLogger(__name__)
 API_URL = "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-2-1"
 HEADERS = {"Authorization": "Bearer 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"}
+
+genai.configure(api_key=settings.GENAI_API_KEY)
+
+# Initialize the generative model
+model = genai.GenerativeModel('gemini-pro')
+chat = model.start_chat(history=[])
 
 def front_view(request):
     if request.method == 'POST':
@@ -170,3 +177,17 @@ def get_image_for_destination(request):
             return JsonResponse({'error': str(e)}, status=500)
 
     return JsonResponse({'error': 'No destination provided'}, status=400)
+@csrf_exempt
+def chat_interaction(request):
+    if request.method == 'POST':
+        question = request.POST.get('msg')  # Get the question from the POST data
+        if not question or not question.strip():
+            return JsonResponse({'error': 'No question provided'}, status=400)
+
+        # Generate a response using the chat model
+        response = chat.send_message(question)
+        response_text = response.text
+
+        return JsonResponse({'response': response_text})
+    else:
+        return JsonResponse({'error': 'Invalid request method'}, status=405)

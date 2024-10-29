@@ -36,7 +36,8 @@ urlpatterns = [
     path('get-activities/', login_required(get_activities), name='get_activities'),  # Route for fetching reservations
     path('delete-reservation/<int:reservation_id>/', login_required(views.delete_reservation), name='delete_reservation'),
     path('update-reservation/<int:reservation_id>/', login_required(views.update_reservation), name='update_reservation'),
-   
+    path('chat/', views.chat_interaction, name='chat_interaction'),  # Chat endpoint
+
 ]
 
 
