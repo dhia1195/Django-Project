@@ -134,6 +134,10 @@
             </li>
 
             <li>
+              <a href="#tour-search" class="navbar-link" data-nav-link>tour search</a>
+            </li>
+
+            <li>
               <a href="#destination" class="navbar-link" data-nav-link>destination</a>
             </li>
 
@@ -206,7 +210,7 @@
 
       <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-      <section class="tour-search">
+      <section id="tour-search" class="tour-search">
         <div class="container">
             <h2 class="section-title">Book Your Tour</h2> <!-- Added section title -->
             <form id="reservation-form" method="POST" class="tour-search-form">
@@ -243,6 +247,15 @@
                     <label for="checkout" class="input-label">Checkout Date*</label>
                     <input type="date" name="checkout_date" id="checkout" required class="input-field" aria-label="Checkout Date">
                 </div>
+                <div class="input-wrapper">
+                  <label for="activite" class="input-label">Choose an Activity*</label>
+                  <select name="activite" id="activite" required class="input-field" aria-label="Choose an Activity">
+                      <option value="" disabled selected>Select an Activity</option>
+                      {% for activite in activities %}
+                          <option value="{{ activite.id }}">{{ activite.nom }}</option>
+                      {% endfor %}
+                  </select>
+              </div>
                 
                 <div class="button-group"> <!-- Grouped buttons for better layout -->
                     <button type="button" id="generate-image" class="btn btn-primary">Generate Image</button>

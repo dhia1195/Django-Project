@@ -13,13 +13,15 @@ from django.http import JsonResponse
 from .models import Reservation
 from django.views.decorators.csrf import csrf_exempt
 import json
-from django.views.decorators.http import require_POST,require_GET
-from django.core.serializers import serialize
+from django.views.decorators.http import require_POST
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from django.shortcuts import get_object_or_404
 import json
 import logging
+from activite.models import Activite  # Import the Activite model
+
+
+
 
 logger = logging.getLogger(__name__)
 API_URL = "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-2-1"
@@ -29,13 +31,13 @@ def front_view(request):
     if request.method == 'POST':
         try:
             # Get data from the form
-            name = request.POST.get('name')
+            name = request.POST.get('name') 
             email = request.POST.get('email')
             destination = request.POST.get('destination')
             number_of_people = request.POST.get('number_of_people')
             date = request.POST.get('date')
             checkout_date = request.POST.get('checkout_date')
-
+            activite_id = request.POST.get('activite')
             # Call the Hugging Face API to generate an image
             payload = {"inputs": destination}
             response = requests.post(API_URL, headers=HEADERS, json=payload)
@@ -65,7 +67,8 @@ def front_view(request):
                 destination=destination,
                 number_of_people=number_of_people,
                 date=date,
-                checkout_date=checkout_date
+                checkout_date=checkout_date,
+                activite_id=activite_id 
             )
 
             # If AJAX request, return JSON response
@@ -80,8 +83,9 @@ def front_view(request):
             messages.error(request, f'An error occurred: {str(e)}')
             if request.headers.get('x-requested-with') == 'XMLHttpRequest':
                 return JsonResponse({'success': False, 'message': str(e)})
-
-    return render(request, 'index.html')
+            
+    activities = Activite.objects.all()  # Fetch all activities
+    return render(request, 'index.html', {'activities': activities})
 
 
 def get_reservations(request):
