@@ -40,7 +40,7 @@ def login(request):
             if check_password(password, user.password):
                 request.session['user_id'] = user.id  # Setting session for logged-in user
                 # messages.success(request, "Login successful!")  # Set a success message               
-                return redirect('front',user)
+                return redirect('front')
             else:
                 messages.error(request, "Invalid password.")  # Set an error message
                 return redirect('auth')
