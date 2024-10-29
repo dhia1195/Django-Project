@@ -138,12 +138,27 @@
             <li>
               <a href="#contact" class="navbar-link" data-nav-link>contact us</a>
             </li>
+            <li>
+              <a href="#profile" class="navbar-link" data-nav-link>profile</a>
+            </li>
 
           </ul>
 
         </nav>
 
         <button class="btn btn-primary">Book Now</button>
+        <!-- Ensure the URL resolves correctly -->
+        <form action="{% url 'logout' %}" method="post" style="display:inline;">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-primary">Logout</button>
+      </form>
+
+      <li>
+        {% if user %}
+        <a href="" class="navbar-link" data-nav-link>{{user.username}}</a>
+        {% endif %}
+      </li>
+
 
       </div>
     </div>
@@ -773,6 +788,22 @@
 
         </div>
       </section>
+
+         <!-- 
+        - #Profile
+      -->
+
+      <section class="gallery" id="profile">
+        <div class="container">
+
+          <p class="section-subtitle">Photo Gallery</p>
+
+          <h2 class="h2 section-title">Profile</h2>
+            
+       
+        </div>
+      </section>
+
 
 
 

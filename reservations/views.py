@@ -8,6 +8,7 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from .models import Reservation  # Ensure the correct import path for your Reservation model
 from django.conf import settings
+from user_client.models import User_client
 
 API_URL = "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-2-1"
 HEADERS = {"Authorization": "Bearer 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"}
@@ -67,8 +68,14 @@ def front_view(request):
             messages.error(request, f'An error occurred: {str(e)}')
             if request.headers.get('x-requested-with') == 'XMLHttpRequest':
                 return JsonResponse({'success': False, 'message': str(e)})
-
-    return render(request, 'index.html')
+    user_id = request.session.get('user_id')  # Get the user ID from session
+    user = None
+    if user_id:
+        try:
+            user = User_client.objects.get(id=user_id)  # Get the user from the database
+        except User_client.DoesNotExist:
+            user = None
+    return render(request, 'index.html',{'user': user})
 
 def get_image_for_destination(request):
     destination = request.GET.get('destination')

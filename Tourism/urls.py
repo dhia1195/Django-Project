@@ -19,11 +19,18 @@ from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
 from reservations.views import front_view, get_image_for_destination  # Ensure both views are imported
+from user_client.views import signup_login_view,login,signup,logout_view
+from .decorators import login_required,logout_required
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-        path('front/', front_view, name='front'),  # Ajoutez cette ligne pour votre vue
-    path('get-image-for-destination/', get_image_for_destination, name='get_image_for_destination'),
+    path('front/', login_required(front_view), name='front'),  # Ajoutez cette ligne pour votre vue
+    path('get-image-for-destination/', login_required(get_image_for_destination), name='get_image_for_destination'),
+     path('auth/signup/', logout_required(signup), name='signup'),
+    path('auth/login/', logout_required(login), name='login'),
+     path('auth/logout/', login_required(logout_view), name='logout'),
+    path('auth/', logout_required(signup_login_view), name='auth'),
+   
 
 ]
 if settings.DEBUG:  # Ensure this is only done in development mode
