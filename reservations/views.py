@@ -13,6 +13,7 @@ from django.http import JsonResponse
 from .models import Reservation
 from django.views.decorators.csrf import csrf_exempt
 import json
+from activite.models import Activite
 from django.views.decorators.http import require_POST,require_GET
 from django.core.serializers import serialize
 from django.http import JsonResponse
@@ -26,6 +27,10 @@ API_URL = "https://api-inference.huggingface.co/models/stabilityai/stable-diffus
 HEADERS = {"Authorization": "Bearer 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"}
 
 def front_view(request):
+    activities = Activite.objects.all()
+    context = {
+        'activities': activities
+    }
     if request.method == 'POST':
         try:
             # Get data from the form
@@ -81,7 +86,7 @@ def front_view(request):
             if request.headers.get('x-requested-with') == 'XMLHttpRequest':
                 return JsonResponse({'success': False, 'message': str(e)})
 
-    return render(request, 'index.html')
+    return render(request, 'index.html', context)
 
 
 def get_reservations(request):

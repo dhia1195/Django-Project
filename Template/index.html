@@ -134,6 +134,10 @@
             </li>
 
             <li>
+              <a href="#tour-search" class="navbar-link" data-nav-link>tour search</a>
+            </li>
+
+            <li>
               <a href="#destination" class="navbar-link" data-nav-link>destination</a>
             </li>
 
@@ -206,7 +210,7 @@
 
       <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-      <section class="tour-search">
+      <section id="tour-search" class="tour-search">
         <div class="container">
             <h2 class="section-title">Book Your Tour</h2> <!-- Added section title -->
             <form id="reservation-form" method="POST" class="tour-search-form">
@@ -243,6 +247,15 @@
                     <label for="checkout" class="input-label">Checkout Date*</label>
                     <input type="date" name="checkout_date" id="checkout" required class="input-field" aria-label="Checkout Date">
                 </div>
+                <div class="input-wrapper">
+                  <label for="activite" class="input-label">Choose an Activity*</label>
+                  <select name="activite" id="activite" required class="input-field" aria-label="Choose an Activity">
+                      <option value="" disabled selected>Select an Activity</option>
+                      {% for activite in activities %}
+                          <option value="{{ activite.id }}">{{ activite.nom }}</option>
+                      {% endfor %}
+                  </select>
+              </div>
                 
                 <div class="button-group"> <!-- Grouped buttons for better layout -->
                     <button type="button" id="generate-image" class="btn btn-primary">Generate Image</button>
@@ -677,96 +690,74 @@ function deleteReservation(reservationId, listItem) {
         - #PACKAGE
       -->
 
-      <section class="activities" id="activities">
+      <section class="package" id="package">
         <div class="container">
-    
             <p class="section-subtitle">Popular Activities</p>
-    
-            <h2 class="h2 section-title">Check Out Our Activities</h2>
-    
+            <h2 class="h2 section-title">Checkout Our Activities</h2>
             <p class="section-text">
-                Discover our curated list of activities and experiences designed to enrich your travel.
+                Discover a variety of activities tailored just for you.
             </p>
     
-            <ul class="activities-list">
+            <ul class="package-list">
                 {% for activity in activities %}
                 <li>
-                    <div class="activity-card">
-    
+                    <div class="package-card">
                         <figure class="card-banner">
                             <img src="{{ activity.image.url }}" alt="{{ activity.nom }}" loading="lazy">
                         </figure>
     
                         <div class="card-content">
-    
                             <h3 class="h3 card-title">{{ activity.nom }}</h3>
-    
-                            <p class="card-text">
-                                Located at {{ activity.adresse }}. Opening hours: {{ activity.horaire }}.
-                            </p>
-    
+                            <p class="card-text">{{ activity.adresse }}</p>
                             <ul class="card-meta-list">
-    
-                                <li class="card-meta-item">
-                                    <div class="meta-box">
-                                        <ion-icon name="time"></ion-icon>
-                                        <p class="text">{{ activity.horaire }}</p>
-                                    </div>
-                                </li>
-    
+                              <li class="card-meta-item">
+                                <div class="meta-box">
+                                    <ion-icon name="time"></ion-icon>
+                                    <p class="text">
+                                        {{ activity.duree }} {{ activity.duree|pluralize:"day,days" }}
+                                    </p>
+                                </div>
+                            </li>
                                 <li class="card-meta-item">
                                     <div class="meta-box">
                                         <ion-icon name="people"></ion-icon>
-                                        <p class="text">Max: {{ activity.capacity }}</p> <!-- Adjust according to your needs -->
+                                        <p class="text">pax: {{ activity.pax }}</p>
                                     </div>
                                 </li>
-    
                                 <li class="card-meta-item">
                                     <div class="meta-box">
                                         <ion-icon name="location"></ion-icon>
                                         <p class="text">{{ activity.adresse }}</p>
                                     </div>
                                 </li>
-    
                             </ul>
-    
                         </div>
     
                         <div class="card-price">
-    
                             <div class="wrapper">
-    
-                                <p class="reviews">({{ activity.evaluation|floatformat:1 }} / 5)</p>
-    
+                                <p class="reviews">(0 reviews)</p>  <!-- Replace with dynamic reviews if needed -->
                                 <div class="card-rating">
-                                    {% for i in "12345"|slice:activity.evaluation %}
                                     <ion-icon name="star"></ion-icon>
-                                    {% endfor %}
-                                    {% for i in "12345"|slice:"5"|slice:activity.evaluation %}
-                                    <ion-icon name="star-outline"></ion-icon>
-                                    {% endfor %}
+                                    <ion-icon name="star"></ion-icon>
+                                    <ion-icon name="star"></ion-icon>
+                                    <ion-icon name="star"></ion-icon>
+                                    <ion-icon name="star"></ion-icon>
                                 </div>
-    
                             </div>
-    
                             <p class="price">
                                 €{{ activity.cout }}
                                 <span>/ per person</span>
                             </p>
-    
                             <button class="btn btn-secondary">Book Now</button>
-    
                         </div>
-    
                     </div>
                 </li>
                 {% endfor %}
             </ul>
-    
-            <button class="btn btn-primary">View All Activities</button>
-    
         </div>
     </section>
+    
+  
 
       <!-- 
         - #GALLERY
@@ -921,6 +912,7 @@ function deleteReservation(reservationId, listItem) {
 
             <li class="contact-item">
               <ion-icon name="location-outline"></ion-icon>
+
               <address>3146 Koontz, California</address>
             </li>
 

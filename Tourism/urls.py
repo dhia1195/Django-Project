@@ -22,16 +22,18 @@ from reservations.views import front_view, get_image_for_destination, get_reserv
 from user_client.views import signup_login_view,login,signup,logout_view
 from .decorators import login_required,logout_required
 from reservations import views 
+from activite.views import get_activities
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('front/', login_required(front_view), name='front'),  # Ajoutez cette ligne pour votre vue
+    path('front/', login_required(front_view), name='front'),
     path('get-image-for-destination/', login_required(get_image_for_destination), name='get_image_for_destination'),
      path('auth/signup/', logout_required(signup), name='signup'),
     path('auth/login/', logout_required(login), name='login'),
      path('auth/logout/', login_required(logout_view), name='logout'),
     path('auth/', logout_required(signup_login_view), name='auth'),
-    path('get-reservations/', login_required(get_reservations), name='get_reservations'),  # Route for fetching reservations
+    path('get-reservations/', login_required(get_reservations), name='get_reservations'),
+    path('get-activities/', login_required(get_activities), name='get_activities'),  # Route for fetching reservations
     path('delete-reservation/<int:reservation_id>/', login_required(views.delete_reservation), name='delete_reservation'),
     path('update-reservation/<int:reservation_id>/', login_required(views.update_reservation), name='update_reservation'),
    
