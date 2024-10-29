@@ -52,7 +52,7 @@ INSTALLED_APPS = [
     'reservations',
     'activite',
     'fournisseur',
-    'user_client'
+    'user_client',
 
     
 ]
