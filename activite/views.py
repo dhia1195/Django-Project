@@ -15,3 +15,4 @@ def get_activities(request):
 def activite_list(request):
     activities = Activite.objects.all()  # Fetch all activities or apply filters if needed
     return render(request, 'index.html', {'activities': activities})
+
