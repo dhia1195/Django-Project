@@ -19,8 +19,9 @@ from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
 from reservations.views import front_view, get_image_for_destination, get_reservations  # Ensure both views are imported
+from user_client.views import signup_login_view,login,signup,logout_view,update_profile
 from activite.views import generate_activity_tags_view
-from user_client.views import signup_login_view,login,signup,logout_view
+
 from .decorators import login_required,logout_required
 from reservations import views 
 
@@ -36,6 +37,8 @@ urlpatterns = [
     path('generate-activity-tags/', generate_activity_tags_view, name='generate_activity_tags'),
     path('delete-reservation/<int:reservation_id>/', login_required(views.delete_reservation), name='delete_reservation'),
     path('update-reservation/<int:reservation_id>/', login_required(views.update_reservation), name='update_reservation'),
+    path('profile/', login_required(update_profile), name='profile'),
+   
     path('chat/', views.chat_interaction, name='chat_interaction'),  # Chat endpoint
 
 ]

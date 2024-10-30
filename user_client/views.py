@@ -4,6 +4,18 @@ from django.http import HttpResponse
 from .models import User_client  # Ensure this is the correct import
 from django.contrib.auth import logout
 from django.contrib import messages  # Import messages for the messaging framework
+import logging  # For logging
+
+
+
+API_URL2 = "https://api-inference.huggingface.co/models/google/flan-t5-large"
+API_URL3 = "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-2-1-base"
+HEADERS = {"Authorization": "Bearer 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"}
+
+
+
+# Set up logging
+logger = logging.getLogger(__name__)
 def signup_login_view(request):
     # Render the login/signup page
     return render(request, 'animated-login/login.html')
@@ -48,7 +60,35 @@ def login(request):
             messages.error(request, "User does not exist.")  # Set an error message
             return redirect('auth')
 
+
+def update_profile(request):
+    user = User_client.objects.get(id=request.session['user_id'])  # Get the logged-in user
+    
+    if request.method == 'POST':
+        # Collect data from the form
+        
+        user.username = request.POST.get('username')
+        user.date_of_birth = request.POST.get('date_of_birth')
+        user.phone_number = request.POST.get('phone_number')
+        user.address = request.POST.get('address')
+        user.email = request.POST.get('email')
+        # Only update the password if provided
+        password = request.POST.get('password')
+        if password:
+            user.password = make_password(password)
+
+        # Save the updated user data
+        user.save()
+        return redirect('front')  # Redirect to profile page after saving
+
+   
+    return redirect('front')
+
+
 def logout_view(request):
     logout(request)  # Log the user out
     messages.success(request, "You have been logged out.")  # Set a success message
     return redirect('auth')
+
+
+
