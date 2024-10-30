@@ -316,6 +316,188 @@
     });
     </script>
 
+    <!-- emna -->
+
+    <section class="feedback-section">
+      <div class="container">
+          <h2 class="section-title">Leave Your Feedback</h2> <!-- Section title -->
+          <div class="feedback-card">
+              <form id="feedback-form" method="POST" class="feedback-form">
+                  {% csrf_token %}
+    
+                  <div class="input-wrapper">
+                      <label for="utilisateur" class="input-label">Your Name*</label>
+                      <input type="text" name="utilisateur" id="utilisateur" required placeholder="Enter Your Name" class="input-field" aria-label="Your Name">
+                  </div>
+  
+                  <div class="input-wrapper">
+                      <label for="destination" class="input-label">Your Destination*</label>
+                      <input type="text" name="destination" id="destination" required placeholder="Enter Your Destination" class="input-field" aria-label="Your Destination">
+                  </div>
+    
+                  <div class="input-wrapper">
+                      <label for="commentaire" class="input-label">Your Comment*</label>
+                      <textarea name="commentaire" id="commentaire" required placeholder="Enter Your Comment" class="input-field" aria-label="Your Comment"></textarea>
+                  </div>
+    
+                  <div class="input-wrapper">
+                      <label for="note" class="input-label">Rating*</label>
+                      <select name="note" id="note" required class="input-field" aria-label="Rating">
+                          <option value="">Select a rating</option>
+                          <option value="0">0</option>
+                          <option value="1">1</option>
+                          <option value="2">2</option>
+                          <option value="3">3</option>
+                          <option value="4">4</option>
+                          <option value="5">5</option>
+                      </select>
+                  </div>
+    
+                  <div class="button-group">
+                      <button type="submit" class="btn btn-primary">Submit</button>
+                  </div>
+              </form>
+          </div>
+          <div id="alert-container" style="margin-top: 20px;"></div>
+      </div>
+  </section>
+  
+<style>
+  .feedback-section {
+    background: #f9f9f9;
+    padding: 40px 20px;
+}
+
+.feedback-card {
+    background: white;
+    border-radius: 10px;
+    padding: 30px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.input-wrapper {
+    margin-bottom: 20px;
+}
+
+.input-label {
+    font-weight: bold;
+    margin-bottom: 5px;
+    display: block;
+}
+
+.input-field {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    transition: border-color 0.3s;
+}
+
+.input-field:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+.btn-primary {
+    background: #007bff;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.btn-primary:hover {
+    background: #0056b3;
+}
+
+.alert-container {
+    margin-top: 20px;
+    padding: 15px;
+    border-radius: 5px;
+    display: none; /* Initially hidden */
+}
+
+.alert-success {
+    background-color: #e8f9e9;
+    color: #2e7d32;
+    border-left: 4px solid #4caf50;
+}
+
+.alert-danger {
+    background-color: #f8d7da;
+    color: #721c24;
+    border-left: 4px solid #f44336;
+}
+</style>
+  
+ <!-- Place this script at the bottom of the page -->
+<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script> <!-- Font Awesome -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- jQuery -->
+
+<script>
+  $(document).ready(function() {
+    $('#feedback-form').on('submit', function (e) {
+      e.preventDefault();
+      var form = $(this);
+
+      $.ajax({
+        type: 'POST',
+        url: form.attr('action'),
+        data: form.serialize(),
+        success: function (response) {
+          let emoji, alertClass, message;
+
+          // Choose emoji and alert class based on the sentiment label
+          switch (response.sentiment) {
+            case 'LABEL_0':
+              emoji = '😞';  // Negative
+              alertClass = 'alert-danger';
+              message = 'Thank you for your feedback! We are sorry to hear you had a negative experience.';
+              break;
+            case 'LABEL_1':
+              emoji = '😐';  // Neutral
+              alertClass = 'alert-warning';
+              message = 'Thank you for your feedback! Your input is valuable to us.';
+              break;
+            case 'LABEL_2':
+            default:
+              emoji = '😊';  // Positive
+              alertClass = 'alert-success';
+              message = 'Thank you for your feedback! We are thrilled to hear you had a positive experience.';
+              break;
+          }
+
+          // Display feedback message
+          $('#alert-container').html(`
+            <div class="alert ${alertClass}" role="alert">
+              <span style="font-size: 2rem;">${emoji}</span><br>
+              <strong>${message}</strong><br>
+              Sentiment Score: ${response.score.toFixed(2)}
+            </div>
+          `).fadeIn(); // Fade in the message
+
+          form[0].reset();  // Reset form after submission
+        },
+        error: function (xhr, status, error) {
+          $('#alert-container').html(`
+            <div class="alert alert-danger" role="alert">
+              <strong>Error!</strong> There was a problem processing your feedback. Please try again.
+            </div>
+          `).fadeIn(); // Fade in error message
+        }
+      });
+    });
+  });
+</script>
+
+
+  
+
+  
+</style>
       <section class="popular" id="destination">
         <div class="container">
 

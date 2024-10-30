@@ -15,15 +15,18 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from reservations.views import front_view, get_image_for_destination  # Ensure both views are imported
+from sentiment.views import sentiment_analysis_view
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-        path('front/', front_view, name='front'),  # Ajoutez cette ligne pour votre vue
+    path('front/', front_view, name='front'),  # Ajoutez cette ligne pour votre vue
     path('get-image-for-destination/', get_image_for_destination, name='get_image_for_destination'),
+    path('sentiment_analysis_view/', sentiment_analysis_view, name='sentiment_analysis'),  # Ajoutez cette ligne pour votre vue
+
 
 ]
 if settings.DEBUG:  # Ensure this is only done in development mode
