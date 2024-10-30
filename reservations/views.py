@@ -16,7 +16,6 @@ from django.views.decorators.csrf import csrf_exempt
 import json
 import re
 from transformers import BlenderbotTokenizer, BlenderbotForConditionalGeneration
-import torch
 import time
 
 from django.views.decorators.http import require_POST
