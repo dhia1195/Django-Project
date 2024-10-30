@@ -15,13 +15,86 @@ from .models import Reservation
 from django.views.decorators.csrf import csrf_exempt
 import json
 import re
+from transformers import BlenderbotTokenizer, BlenderbotForConditionalGeneration
+import torch
+import time
+
 
 API_URL = "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-2-1"
+API_URL2 = "https://api-inference.huggingface.co/models/google/flan-t5-large"
+API_URL3 = "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-2-1-base"
 HEADERS = {"Authorization": "Bearer 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"}
 
+
+def queryFood(payload):
+    response = requests.post(API_URL2, headers=HEADERS, json=payload)
+    return response.json()
+def queryImage(payload):
+    response1 = requests.post(API_URL3, headers=HEADERS, json=payload)
+    
+    if response1.status_code == 200:
+        # Assuming the API returns an image directly
+        # Save the image to a file or return the content
+        return response1.content  # This returns the raw image data
+    else:
+        print("Error fetching data:", response1.status_code)
+        return None
+def wait_for_image_load(payload, timeout=1200):
+    start_time = time.time()
+    while True:
+        image_data = queryImage(payload)
+        if image_data:
+            return image_data  # Image loaded successfully
+        elif time.time() - start_time > timeout:
+            print("Timeout waiting for image to load.")
+            return None  # Return None if the timeout is reached
+        time.sleep(1)  # Wait before trying again
+def food_recommendation(country):
+    print(f"What are some famous dishes to try in {country}?")
+    foodR = queryFood({"inputs": f"What are some famous dishes to try in {country}?"})
+    food_name=foodR[0]['generated_text']
+    imageR=wait_for_image_load({"inputs": food_name})
+     # Define the directory and image path
+    image_dir = 'static/images'
+    image_path = os.path.join(image_dir, f'{food_name}.jpg')
+    image_name=f'{food_name}.jpg'    
+     # Create the directory if it doesn't exist
+    os.makedirs(image_dir, exist_ok=True)
+    with open(image_path, 'wb') as img_file:
+        img_file.write(imageR)
+    ("Image saved at:", image_path)
+    return food_name,image_name
+    # print({food,image})
+
+        
+
+
 def front_view(request):
+    country_names = []
+    foodR=''
+    imageF=''
+    response = requests.get("https://restcountries.com/v3.1/all") 
+    if response.status_code == 200:
+        data = response.json()
+        # Extract country names
+        country_names = [country['name']['common'] for country in data]
+        
+    else:
+        print("Error fetching data:", response.status_code)
+  
     if request.method == 'POST':
+     if request.POST.get('country'):
+            print('country')
+            country_name=request.POST.get('country')
+            result=food_recommendation(country_name)
+            foodR=result[0]
+            imageF=result[1]
+            print(imageF)
+            
+
+     else:
         try:
+
             # Get data from the form
             name = request.POST.get('name')
             email = request.POST.get('email')
@@ -78,10 +151,11 @@ def front_view(request):
     user = None
     if user_id:
         try:
-            user = User_client.objects.get(id=user_id)  # Get the user from the database
+            user = User_client.objects.get(id=user_id)
+            formatted_date = user.date_of_birth.strftime('%Y-%m-%d')  # Get the user from the database
         except User_client.DoesNotExist:
             user = None
-    return render(request, 'index.html',{'user': user})
+    return render(request, 'index.html',{'user': user, 'formatted_date': formatted_date,'countries':country_names,'foodR':foodR,'imageF':imageF})
 
 
 def get_reservations(request):

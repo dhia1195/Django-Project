@@ -410,6 +410,37 @@
 .modal { display: none; position: fixed; /* additional styling here */ }
 .modal-content { /* styling for modal content */ }
 .close { cursor: pointer; }
+
+#recommendationModal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
 </style>
 
 <!-- JavaScript for Modal and AJAX Request -->
@@ -990,7 +1021,38 @@
 
         </div>
       </section>
+       <!-- 
+        - #Recommendation
+      -->
+      <section class="gallery" id="recommendation">
+        <div class="container">
 
+          <!-- <p class="section-subtitle">Photo Gallery</p> -->
+
+          <h1>Select a Country</h1>
+    <form action="#" method="POST" class="tour-search-form" id="profile-form">
+        {% csrf_token %}
+        <select name="country" id="country">
+            {% for country in countries %}
+                <option value="{{ country }}">{{ country }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit" class="btn btn-secondary">Submit</button>
+    </form>
+
+    {% if foodR %}
+    <h2>Famous Dishe:</h2>
+    <ul>
+        
+            <li>{{ foodR }}</li>
+        
+    </ul>
+    <h3>Image:</h3>
+    <img src="{% static 'images/' %}{{ imageF }}" alt="Food Image">
+    {% endif %}
+        
+          </div>
+      </section>
          <!-- 
         - #Profile
       -->
@@ -998,10 +1060,50 @@
       <section class="gallery" id="profile">
         <div class="container">
 
-          <p class="section-subtitle">Photo Gallery</p>
+          <!-- <p class="section-subtitle">Photo Gallery</p> -->
 
           <h2 class="h2 section-title">Profile</h2>
+          <form id="profile-form" method="POST" action="/profile/" class="tour-search-form">
+            {% csrf_token %}
             
+            <div class="input-wrapper">
+                <label for="username" class="input-label">Your Name*</label>
+                <input type="text" name="username" id="username" required placeholder="Enter Your Name" class="input-field" aria-label="Your Name" value="{{user.username}}">
+            </div>
+
+            <div class="input-wrapper">
+              <label for="date_of_birth" class="input-label">Your Date of birth</label>
+              <input type="date" name="date_of_birth" id="date_of_birth" required placeholder="Your Date of birth" class="input-field" aria-label="Your Date of birth" value="{{formatted_date}}">
+          </div>
+
+          <div class="input-wrapper">
+            <label for="phone_number" class="input-label">Your Phone Number</label>
+            <input type="text" name="phone_number" id="phone_number" placeholder="Your Phone Number" class="input-field" aria-label="Your Phone Number" pattern="[0-9]+" value="{{user.phone_number}}"  required/>
+          </div>
+          <div class="input-wrapper">
+            <label for="address" class="input-label">Your address*</label>
+            <input type="text" name="address" id="address" required placeholder="Enter Your Address" class="input-field" aria-label="Your Address" value="{{user.address}}">
+        </div>
+            
+            <div class="input-wrapper">
+                <label for="email" class="input-label">Your Email*</label>
+                <input type="email" name="email" id="email" required placeholder="Enter Your Email" class="input-field" aria-label="Your Email" value="{{user.email}}">
+            </div>
+            
+            <div class="input-wrapper">
+              <label for="password" class="input-label">Password</label>
+              <input type="password" name="password" id="password"  placeholder="Enter Your Password" class="input-field" aria-label="Your Password" >
+          </div>
+          
+      
+            
+            
+            
+            <div class="button-group"> <!-- Grouped buttons for better layout -->
+                
+                <button type="submit" class="btn btn-secondary">Modify</button>
+            </div>
+        </form>
        
         </div>
       </section>
@@ -1155,6 +1257,13 @@
   </a>
 
 
+
+  <script>
+    // Function to display alert messages
+    function showAlert(message) {
+        alert(message);
+    }
+</script>
 
 
 
