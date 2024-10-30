@@ -4,14 +4,14 @@ import requests
 import base64  # Ensure base64 is imported
 from PIL import Image
 from django.http import JsonResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect 
 from django.contrib import messages
 from .models import Reservation  # Ensure the correct import path for your Reservation model
 from django.conf import settings
-from user_client.models import User_client
 from django.core.serializers import serialize
 from django.http import JsonResponse
 from .models import Reservation
+from user_client.models import User_client
 from django.views.decorators.csrf import csrf_exempt
 import json
 import re
@@ -19,7 +19,18 @@ from transformers import BlenderbotTokenizer, BlenderbotForConditionalGeneration
 import torch
 import time
 
+from django.views.decorators.http import require_POST
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+import json
+import logging
+from activite.models import Activite  # Import the Activite model
+import google.generativeai as genai
 
+
+
+
+logger = logging.getLogger(__name__)
 API_URL = "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-2-1"
 API_URL2 = "https://api-inference.huggingface.co/models/google/flan-t5-large"
 API_URL3 = "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-2-1-base"
@@ -68,6 +79,11 @@ def food_recommendation(country):
 
         
 
+genai.configure(api_key=settings.GENAI_API_KEY)
+
+# Initialize the generative model
+model = genai.GenerativeModel('gemini-pro')
+chat = model.start_chat(history=[])
 
 def front_view(request):
     country_names = []
@@ -96,13 +112,13 @@ def front_view(request):
         try:
 
             # Get data from the form
-            name = request.POST.get('name')
+            name = request.POST.get('name') 
             email = request.POST.get('email')
             destination = request.POST.get('destination')
             number_of_people = request.POST.get('number_of_people')
             date = request.POST.get('date')
             checkout_date = request.POST.get('checkout_date')
-
+            activite_id = request.POST.get('activite')
             # Call the Hugging Face API to generate an image
             payload = {"inputs": destination}
             response = requests.post(API_URL, headers=HEADERS, json=payload)
@@ -132,7 +148,8 @@ def front_view(request):
                 destination=destination,
                 number_of_people=number_of_people,
                 date=date,
-                checkout_date=checkout_date
+                checkout_date=checkout_date,
+                activite_id=activite_id 
             )
 
             # If AJAX request, return JSON response
@@ -155,75 +172,52 @@ def front_view(request):
             formatted_date = user.date_of_birth.strftime('%Y-%m-%d')  # Get the user from the database
         except User_client.DoesNotExist:
             user = None
-    return render(request, 'index.html',{'user': user, 'formatted_date': formatted_date,'countries':country_names,'foodR':foodR,'imageF':imageF})
+    activities = Activite.get_activities_with_captions()  # Fetch all activities      
+    return render(request, 'index.html',{'activities': activities,'user': user, 'formatted_date': formatted_date,'countries':country_names,'foodR':foodR,'imageF':imageF})
+            
+   
+   
 
 
 def get_reservations(request):
     if request.method == 'GET' and request.headers.get('x-requested-with') == 'XMLHttpRequest':
-        reservations = Reservation.objects.all()
-        reservations_data = serialize('json', reservations)
-        return JsonResponse({'reservations': reservations_data}, safe=False)
+        # Serialize only the fields you need for each reservation
+        reservations = Reservation.objects.all().values(
+            'id', 'name', 'email', 'destination', 'number_of_people', 'date', 'checkout_date', 'activite__nom'
+        )
+        return JsonResponse({'reservations': list(reservations)}, safe=False)
     return JsonResponse({'error': 'Invalid request'}, status=400)
 
-@csrf_exempt  # Exempt CSRF validation for simplicity; handle properly in production
+@csrf_exempt
+@require_POST
 def update_reservation(request, reservation_id):
-    if request.method == 'POST':
-        try:
-            # Parse the incoming data
-            data = json.loads(request.body)
-
-            # Attempt to retrieve the reservation directly
-            reservation = Reservation.objects.filter(id=reservation_id).first()
-            if not reservation:
-                return JsonResponse({'success': False, 'message': 'Reservation not found.'}, status=404)
-
-            # Validate incoming data
-            name = data.get('name')
-            email = data.get('email')
-            destination = data.get('destination')
-            number_of_people = data.get('number_of_people')
-            date = data.get('date')
-            checkout_date = data.get('checkout_date')
-
-            # Perform validation
-            errors = {}
-            if not name:
-                errors['name'] = 'Name is required.'
-            if email and not re.match(r"[^@]+@[^@]+\.[^@]+", email):
-                errors['email'] = 'Invalid email format.'
-            if number_of_people is not None and (not isinstance(number_of_people, int) or number_of_people <= 0):
-                errors['number_of_people'] = 'Number of people must be a positive integer.'
-            if not date:
-                errors['date'] = 'Date is required.'
-            if not checkout_date:
-                errors['checkout_date'] = 'Checkout date is required.'
-
-            if errors:
-                return JsonResponse({'success': False, 'message': 'Validation errors.', 'errors': errors}, status=400)
-
-            # Update the reservation fields directly
-            reservation.name = name
-            reservation.email = email
-            reservation.destination = destination
-            reservation.number_of_people = number_of_people
-            reservation.date = date
-            reservation.checkout_date = checkout_date
-
-            # Save the updated reservation
-            reservation.save()
-
-            return JsonResponse({'success': True, 'message': 'Reservation updated successfully.'})
-
-        except json.JSONDecodeError:
-            return JsonResponse({'success': False, 'message': 'Invalid JSON.'})
-        except Exception as e:
-            return JsonResponse({'success': False, 'message': f'Error: {str(e)}'})
-
-    return JsonResponse({'success': False, 'message': 'Invalid request method.'})
+    try:
+        data = json.loads(request.body)
+        reservation = Reservation.objects.get(id=reservation_id)
+        
+        # Update fields and log the data for debugging
+        reservation.name = data.get('name', reservation.name)
+        reservation.email = data.get('email', reservation.email)
+        reservation.destination = data.get('destination', reservation.destination)
+        reservation.number_of_people = data.get('number_of_people', reservation.number_of_people)
+        reservation.date = data.get('date', reservation.date)
+        reservation.checkout_date = data.get('checkout_date', reservation.checkout_date)
+        
+        
+        reservation.save()  # Attempt to save to DB
+        logger.info(f"Updated reservation {reservation_id} successfully.")
+        
+        return JsonResponse({'success': True, 'message': 'Reservation updated successfully.'})
+    except Reservation.DoesNotExist:
+        logger.error(f"Reservation with id {reservation_id} does not exist.")
+        return JsonResponse({'success': False, 'message': 'Reservation not found.'}, status=404)
+    except Exception as e:
+        logger.error(f"Error updating reservation {reservation_id}: {str(e)}")
+        return JsonResponse({'success': False, 'message': str(e)}, status=500)
 
 @csrf_exempt  # Temporarily disable CSRF protection for testing
 def delete_reservation(request, reservation_id):
-    if request.method == 'POST':
+    if request.method == 'DELETE':
         try:
             reservation = Reservation.objects.get(id=reservation_id)
             reservation.delete()
@@ -267,3 +261,17 @@ def get_image_for_destination(request):
             return JsonResponse({'error': str(e)}, status=500)
 
     return JsonResponse({'error': 'No destination provided'}, status=400)
+@csrf_exempt
+def chat_interaction(request):
+    if request.method == 'POST':
+        question = request.POST.get('msg')  # Get the question from the POST data
+        if not question or not question.strip():
+            return JsonResponse({'error': 'No question provided'}, status=400)
+
+        # Generate a response using the chat model
+        response = chat.send_message(question)
+        response_text = response.text
+
+        return JsonResponse({'response': response_text})
+    else:
+        return JsonResponse({'error': 'Invalid request method'}, status=405)

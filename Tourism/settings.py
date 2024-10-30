@@ -21,6 +21,7 @@ load_dotenv()
 HUGGINGFACE_API_TOKEN = os.getenv('HUGGINGFACE_API_TOKEN')
 print(f"Hugging Face Token: {HUGGINGFACE_API_TOKEN}")
 
+GENAI_API_KEY = "AIzaSyCULHPInqJI2UuzQG3a8jC8gfE8WPwZlI0"
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -50,8 +51,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'reservations',
+    'activite',
     'fournisseur',
-    'user_client'
+    'user_client',
 
     
 ]
