@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     'activite',
     'fournisseur',
     'user_client',
+    'traductions',
 
     
 ]

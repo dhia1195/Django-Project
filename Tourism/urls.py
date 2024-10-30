@@ -24,6 +24,8 @@ from activite.views import generate_activity_tags_view
 
 from .decorators import login_required,logout_required
 from reservations import views 
+from traductions.views import translation_view,get_translations
+from reservations import views  
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -38,11 +40,10 @@ urlpatterns = [
     path('delete-reservation/<int:reservation_id>/', login_required(views.delete_reservation), name='delete_reservation'),
     path('update-reservation/<int:reservation_id>/', login_required(views.update_reservation), name='update_reservation'),
     path('profile/', login_required(update_profile), name='profile'),
-   
+    path('translation_view/', translation_view, name='translation'),  # Route for image generation
+    path('translation/', get_translations, name='translationt'),  # Route for image generation
     path('chat/', views.chat_interaction, name='chat_interaction'),  # Chat endpoint
-
 ]
-
 
 
 # Serve media files in development mode

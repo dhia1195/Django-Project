@@ -16,7 +16,6 @@ from django.views.decorators.csrf import csrf_exempt
 import json
 import re
 from transformers import BlenderbotTokenizer, BlenderbotForConditionalGeneration
-import torch
 import time
 
 from django.views.decorators.http import require_POST
@@ -178,6 +177,8 @@ def front_view(request):
    
    
 
+
+    return render(request, 'index.html')
 
 def get_reservations(request):
     if request.method == 'GET' and request.headers.get('x-requested-with') == 'XMLHttpRequest':
