@@ -1,0 +1,1676 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TravelSmart - Travel agancy</title>
+
+  <!-- 
+    - favicon
+  -->
+  <link rel="shortcut icon" href="{% static 'favicon.svg' %}" type="image/svg+xml">
+
+  <!-- 
+    - custom css link
+  -->
+<link rel="stylesheet" href="{% static 'assets/css/style.css' %}">
+
+  
+  <!-- 
+    - google font link
+  -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&family=Poppins:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- jQuery and Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+
+<meta name="csrf-token" content="{{ csrf_token }}">
+
+
+</head>
+
+<body id="top">
+
+  <!-- 
+    - #HEADER
+  -->
+
+  <header class="header" data-header>
+
+    <div class="overlay" data-overlay></div>
+
+    <div class="header-top">
+      <div class="container">
+
+        <a href="tel:+01123456790" class="helpline-box">
+
+          <div class="icon-box">
+            <ion-icon name="call-outline"></ion-icon>
+          </div>
+
+          <div class="wrapper">
+            <p class="helpline-title">For Further Inquires :</p>
+
+            <p class="helpline-number">+01 (123) 4567 90</p>
+          </div>
+
+        </a>
+
+        <a href="#" class="logo">
+          <img src="{% static 'assets/images/logo.svg' %}" alt="Tourly logo">
+        </a>
+
+        <div class="header-btn-group">
+
+          <button class="search-btn" aria-label="Search">
+            <ion-icon name="search"></ion-icon>
+          </button>
+
+          <button class="nav-open-btn" aria-label="Open Menu" data-nav-open-btn>
+            <ion-icon name="menu-outline"></ion-icon>
+          </button>
+
+        </div>
+
+      </div>
+    </div>
+
+    <div class="header-bottom">
+      <div class="container">
+
+        <ul class="social-list">
+
+          <li>
+            <a href="#" class="social-link">
+              <ion-icon name="logo-facebook"></ion-icon>
+            </a>
+          </li>
+
+          <li>
+            <a href="#" class="social-link">
+              <ion-icon name="logo-twitter"></ion-icon>
+            </a>
+          </li>
+
+          <li>
+            <a href="#" class="social-link">
+              <ion-icon name="logo-youtube"></ion-icon>
+            </a>
+          </li>
+
+        </ul>
+
+        <nav class="navbar" data-navbar>
+
+          <div class="navbar-top">
+
+            <a href="#" class="logo">
+              <img src="{% static 'assets/images/logo-blue.svg' %}" alt="Tourly logo">
+            </a>
+
+            <button class="nav-close-btn" aria-label="Close Menu" data-nav-close-btn>
+              <ion-icon name="close-outline"></ion-icon>
+            </button>
+
+          </div>
+
+          <ul class="navbar-list">
+
+            <li>
+              <a href="#home" class="navbar-link" data-nav-link>home</a>
+            </li>
+
+            <li>
+              <a href="#" class="navbar-link" data-nav-link>about us</a>
+            </li>
+
+            <li>
+              <a href="#tour-search" class="navbar-link" data-nav-link>tour search</a>
+            </li>
+
+            <li>
+              <a href="#destination" class="navbar-link" data-nav-link>destination</a>
+            </li>
+
+            <li>
+              <a href="#package" class="navbar-link" data-nav-link>packages</a>
+            </li>
+
+            <li>
+              <a href="#gallery" class="navbar-link" data-nav-link>gallery</a>
+            </li>
+
+            <li>
+              <a href="#contact" class="navbar-link" data-nav-link>contact us</a>
+            </li>
+            <li>
+              <a href="#profile" class="navbar-link" data-nav-link>profile</a>
+            </li>
+
+          </ul>
+
+        </nav>
+
+      
+        <!-- Ensure the URL resolves correctly -->
+        <form action="{% url 'logout' %}" method="post" style="display:inline;">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-primary">Logout</button>
+      </form>
+
+      <li>
+        {% if user %}
+        <a href="" class="navbar-link" data-nav-link>{{user.username}}</a>
+        {% endif %}
+      </li>
+
+
+      </div>
+    </div>
+
+  </header>
+
+
+
+
+
+  <main>
+    <article>
+
+      <!-- 
+        - #HERO
+      -->
+
+      <section class="hero" id="home">
+        <div class="container">
+
+          <h2 class="h1 hero-title" style="color: white;">Journey to explore world</h2>
+
+          <p class="hero-text">
+            Welcome to Tourly, your premier travel agency specializing in personalized journeys that create unforgettable experiences. Our expert team crafts tailored itineraries that cater to your unique preferences, whether you're seeking adventure, relaxation, or cultural enrichment. With a commitment to exceptional service and meticulous attention to detail, we ensure every aspect of your trip is seamless and extraordinary. Let Tourly transform your travel dreams into reality.
+          </p>
+
+          <div class="btn-group">
+            <button class="btn btn-primary">Learn more</button>
+
+            <button class="btn btn-secondary">Book now</button>
+          </div>
+
+        </div>
+      </section>
+
+      <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+      <section id="tour-search" class="tour-search">
+        <div class="container">
+            <h2 class="section-title">Book Your Tour</h2> <!-- Added section title -->
+            <form id="reservation-form" method="POST" class="tour-search-form">
+                {% csrf_token %}
+                
+                <div class="input-wrapper">
+                    <label for="name" class="input-label">Your Name*</label>
+                    <input type="text" name="name" id="name" required placeholder="Enter Your Name" class="input-field" aria-label="Your Name">
+                </div>
+                
+                <div class="input-wrapper">
+                    <label for="email" class="input-label">Your Email*</label>
+                    <input type="email" name="email" id="email" required placeholder="Enter Your Email" class="input-field" aria-label="Your Email">
+                </div>
+                
+                
+                <div class="input-wrapper">
+                    <label for="people" class="input-label">Max Number*</label>
+                    <input type="number" name="number_of_people" id="people" required placeholder="No. of People" class="input-field" aria-label="Max Number of People">
+                </div>
+                
+                <div class="input-wrapper">
+                    <label for="checkin" class="input-label">Check-in Date*</label>
+                    <input type="date" name="date" id="checkin" required class="input-field" aria-label="Check-in Date">
+                </div>
+                
+                <div class="input-wrapper">
+                    <label for="checkout" class="input-label">Checkout Date*</label>
+                    <input type="date" name="checkout_date" id="checkout" required class="input-field" aria-label="Checkout Date">
+                </div>
+                <div class="input-wrapper">
+                  <label for="activite" class="input-label">Choose an Activity*</label>
+                  <select name="activite" id="activite" required class="input-field" aria-label="Choose an Activity">
+                      <option value="" disabled selected>Select an Activity</option>
+                      {% for activite in activities %}
+                          <option value="{{ activite.id }}">{{ activite.nom }}</option>
+                      {% endfor %}
+                  </select>
+              </div>
+              <div class="input-wrapper">
+                <label for="destination" class="input-label">Search Destination*</label>
+                <input type="text" name="destination" id="destination" required placeholder="Enter Destination" class="input-field" aria-label="Search Destination">
+            </div>
+            
+            <div id="destination-image" class="image-preview"></div>  <!-- Added class for styling -->
+        
+                
+                <div class="button-group"> <!-- Grouped buttons for better layout -->
+                    <button type="button" id="generate-image" class="btn btn-primary">Generate Image</button>
+                    <button type="submit" class="btn btn-secondary">Inquire Now</button>
+                </div>
+            </form>
+            <div id="alert-container"></div>
+        </div>
+        
+    </section>
+    
+    <style>
+        .section-title {
+            text-align: center;
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+    
+        .input-wrapper {
+            margin-bottom: 15px;
+        }
+    
+        .image-preview {
+            margin-top: 15px;
+            text-align: center;
+        }
+    
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+    
+        .alert {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .card-tags {
+            margin-top: 10px;
+        }
+
+        .card-tags .tag {
+            display: inline-block;
+            background-color: #e0f7fa; /* Light blue background */
+            color: #00796b; /* Dark teal text */
+            font-size: 0.875rem;
+            font-weight: 500;
+            padding: 5px 10px;
+            border-radius: 15px;
+            margin-right: 5px;
+            margin-bottom: 5px;
+        }
+
+        .card-tags .tag:hover {
+            background-color: #b2ebf2; /* Slightly darker on hover */
+        }
+    </style>
+    
+    <script>
+    $(document).ready(function() {
+        // Handle image generation on button click
+        $('#generate-image').on('click', function() {
+            var destination = $('#destination').val();
+            if (destination.length > 0) {
+                $.ajax({
+                    type: 'GET',
+                    url: '/get-image-for-destination/',
+                    data: { destination: destination },
+                    success: function(response) {
+                        if (response.image_data) {
+                            $('#destination-image').html(`
+                                <img src="data:image/png;base64,${response.image_data}" 
+                                     alt="Image of ${destination}" 
+                                     style="width: 200px; border: 1px solid #ccc; border-radius: 5px;">
+                            `);
+                        } else {
+                            $('#destination-image').html(`<p>No image found for "${destination}".</p>`);
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error fetching image:', status, error);
+                        $('#destination-image').html(`<p>Error fetching image. Please try again.</p>`);
+                    }
+                });
+            } else {
+                alert('Please enter a destination first.');
+            }
+        });
+            $('#reservation-form').on('submit', function(e) {
+            e.preventDefault();
+            var form = $(this);
+            
+            $.ajax({
+                type: 'POST',
+                url: form.attr('action'),
+                data: form.serialize(),
+                success: function(response) {
+                    $('#alert-container').html(`
+                        <div class="alert alert-success" role="alert">
+                            Your reservation has been submitted successfully!
+                        </div>
+                    `);
+                    
+                    form[0].reset();
+                    $('#destination-image').empty(); // Clear the image after submission
+                },
+                error: function(xhr, status, error) {
+                    console.error('AJAX Error:', status, error, xhr.responseText);
+                    $('#alert-container').html(`
+                        <div class="alert alert-danger" role="alert">
+                            There was an error submitting your reservation! Please try again.
+                        </div>
+                    `);
+                }
+            });
+        });
+    });
+    </script>
+<!-- Show My Reservations Button -->
+<div class="text-center">
+<button id="showReservationsBtn" class="btn btn-primary" >Show My Reservations</button>
+</div>
+<!-- Bootstrap Modal -->
+<div class="modal fade" id="reservationModal" tabindex="-1" role="dialog" aria-labelledby="reservationModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="reservationModalLabel">Your Reservations</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <ul id="reservationList" class="list-group"></ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal for editing reservations -->
+<div class="modal fade" id="editReservationModal" tabindex="-1" aria-labelledby="editReservationModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title" id="editReservationModalLabel">Edit Reservation</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+              <form id="editReservationForm">
+                  <input type="hidden" id="reservationId">
+                  <div class="mb-3">
+                      <label for="name" class="form-label">Name</label>
+                      <input type="text" class="form-control" id="name" required>
+                  </div>
+                  <div class="mb-3">
+                      <label for="email" class="form-label">Email</label>
+                      <input type="email" class="form-control" id="email" required>
+                  </div>
+                  <div class="mb-3">
+                      <label for="destination" class="form-label">Destination</label>
+                      <input type="text" class="form-control" id="destination" required>
+                  </div>
+                  <div class="mb-3">
+                      <label for="number_of_people" class="form-label">Number of People</label>
+                      <input type="number" class="form-control" id="number_of_people" required>
+                  </div>
+                  <div class="mb-3">
+                      <label for="date" class="form-label">Date</label>
+                      <input type="date" class="form-control" id="date" required>
+                  </div>
+                  <div class="mb-3">
+                      <label for="checkout_date" class="form-label">Checkout Date</label>
+                      <input type="date" class="form-control" id="checkout_date" required>
+                  </div>
+                  <button type="submit" class="btn btn-primary">Update Reservation</button>
+              </form>
+          </div>
+      </div>
+  </div>
+</div>
+
+<!-- Button to show reservations -->
+<button id="showReservationsBtn" class="btn btn-primary">Show Reservations</button>
+
+<!-- CSRF Token -->
+<meta name="csrf-token" content="{{ csrf_token }}">
+
+
+<!-- Styling for Modal -->
+<style>
+.modal { display: none; position: fixed; /* additional styling here */ }
+.modal-content { /* styling for modal content */ }
+.close { cursor: pointer; }
+
+#recommendationModal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+</style>
+
+<!-- JavaScript for Modal and AJAX Request -->
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const showReservationsBtn = document.getElementById("showReservationsBtn");
+    const reservationList = document.getElementById("reservationList");
+    const reservationModal = new bootstrap.Modal(document.getElementById('reservationModal'));
+
+    showReservationsBtn.onclick = function () {
+        fetch('/get-reservations/', { headers: { 'x-requested-with': 'XMLHttpRequest' } })
+            .then(response => response.json())
+            .then(data => {
+                if (data.reservations) {
+                    reservationList.innerHTML = ''; // Clear any existing list items
+                    data.reservations.forEach(reservation => {
+                        const li = document.createElement("li");
+                        li.className = "list-group-item d-flex justify-content-between align-items-center";
+                        li.innerHTML = `
+                            <div>
+                                <strong>Name:</strong> ${reservation.name}<br>
+                                <strong>Email:</strong> ${reservation.email}<br>
+                                <strong>Destination:</strong> ${reservation.destination}<br>
+                                <strong>Number of People:</strong> ${reservation.number_of_people}<br>
+                                <strong>Date:</strong> ${new Date(reservation.date).toLocaleDateString()}<br>
+                                <strong>Checkout Date:</strong> ${new Date(reservation.checkout_date).toLocaleDateString()}<br>
+                                <strong>Activity:</strong> ${reservation.activite__nom || 'Not provided'} <!-- Use 'activite__nom' instead of 'activite__name' -->
+                            </div>
+                        `;
+                        
+                        const editBtn = createButton("Edit", "btn-warning", () => {
+                            openEditModal(reservation);
+                        });
+                        
+                        const deleteBtn = createButton("Delete", "btn-danger", () => {
+                            deleteReservation(reservation.id, li);
+                        });
+                        
+                        li.appendChild(editBtn);
+                        li.appendChild(deleteBtn);
+                        reservationList.appendChild(li);
+                    });
+                    reservationModal.show();
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching reservations:', error);
+            });
+    };
+
+    function createButton(text, className, onClick) {
+        const button = document.createElement("button");
+        button.className = `btn btn-sm ${className} ml-2`;
+        button.innerText = text;
+        button.onclick = onClick;
+        return button;
+    }
+
+    function openEditModal(reservation) {
+        document.getElementById('reservationId').value = reservation.id;
+        document.getElementById('name').value = reservation.name;
+        document.getElementById('email').value = reservation.email;
+        document.getElementById('destination').value = reservation.destination;
+        document.getElementById('number_of_people').value = reservation.number_of_people;
+        document.getElementById('date').value = reservation.date;
+        document.getElementById('checkout_date').value = reservation.checkout_date;
+
+        const editModal = new bootstrap.Modal(document.getElementById('editReservationModal'));
+        editModal.show();
+    }
+});function getCSRFToken() {
+    return document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+}
+
+// Handling form submission
+document.getElementById('editReservationForm').addEventListener('submit', function(event) {
+    event.preventDefault(); // Prevent the default form submission
+
+    const reservationId = document.getElementById('reservationId').value; // Get reservation ID
+    const updatedData = {
+        name: document.getElementById('name').value,
+        email: document.getElementById('email').value,
+        destination: document.getElementById('destination').value,
+        number_of_people: parseInt(document.getElementById('number_of_people').value, 10),
+        date: document.getElementById('date').value,
+        checkout_date: document.getElementById('checkout_date').value
+    };
+
+    // Sending the POST request
+    fetch(`/update-reservation/${reservationId}/`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCSRFToken()
+        },
+        body: JSON.stringify(updatedData) // Send the updated data as JSON
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert(data.message); // Show success message
+            const editModal = bootstrap.Modal.getInstance(document.getElementById('editReservationModal'));
+            editModal.hide(); // Close the modal
+            // Optionally refresh the reservation list or update the UI here
+        } else {
+            alert(data.message); // Show error message
+        }
+    })
+    .catch(error => {
+        console.error('Error updating reservation:', error);
+        alert('An error occurred while updating the reservation.');
+    });
+});
+function deleteReservation(reservationId, listItem) {
+    fetch(`/delete-reservation/${reservationId}/`, {
+        method: 'DELETE',
+        headers: {
+            'X-CSRFToken': getCSRFToken(),
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert(data.message);
+            listItem.remove(); // Remove the list item from the UI
+        } else {
+            alert(data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error deleting reservation:', error);
+        alert('An error occurred while deleting the reservation.');
+    });
+}
+
+  </script>
+ <!-- Button to open chat -->
+<button id="open-chat" style="position: fixed; bottom: 20px; right: 20px; background-color: #007bff; color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer;">
+  Chat
+</button>
+
+<!-- Chat Popup -->
+<div id="chat-popup" style="display: none; position: fixed; bottom: 70px; right: 20px; width: 300px; border: 1px solid #ccc; border-radius: 5px; background-color: white; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); z-index: 1000;">
+  <h1 style="text-align: center; color: #007bff; font-size: 20px;">Chat For reservation</h1>
+  <div id="chat-container" style="border: 1px solid #ccc; border-radius: 5px; height: 300px; overflow-y: auto; padding: 10px;"></div>
+  <div id="input-container" style="display: flex; justify-content: center; margin-top: 10px;">
+      <input type="text" id="prompt" placeholder="Type your message" style="flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 5px; margin-right: 5px;">
+      <button onclick="sendMessage()" style="background-color: #007bff; color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; transition: background-color 0.3s;">
+          <i class="fas fa-paper-plane"></i> Send
+      </button>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js"></script>
+<script>
+  // Toggle chat popup visibility
+  document.getElementById("open-chat").onclick = function() {
+      const chatPopup = document.getElementById("chat-popup");
+      chatPopup.style.display = chatPopup.style.display === "none" ? "block" : "none";
+  };
+
+  function sendMessage() {
+      const prompt = document.getElementById("prompt").value;
+      if (prompt.trim() === "") return;
+
+      // Display user message
+      const chatContainer = document.getElementById("chat-container");
+      const userMessage = document.createElement("div");
+      userMessage.classList.add("message", "user-message");
+      userMessage.innerHTML = `<i class="fas fa-user"></i> You: ${prompt}`;
+      chatContainer.appendChild(userMessage);
+      chatContainer.scrollTop = chatContainer.scrollHeight;
+
+      fetch("/chat/", {
+          method: "POST",
+          headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+              "X-Requested-With": "XMLHttpRequest"
+          },
+          body: new URLSearchParams({ msg: prompt })
+      })
+      .then(response => response.json())
+      .then(data => {
+          const responseMessage = document.createElement("div");
+          responseMessage.classList.add("message", "bot-message");
+          if (data.response) {
+              responseMessage.innerHTML = `<i class="fas fa-robot"></i> Bot: ${data.response}`;
+          } else {
+              responseMessage.innerHTML = `<i class="fas fa-exclamation-triangle"></i> Error: ${data.error}`;
+              responseMessage.style.color = "red";
+          }
+          chatContainer.appendChild(responseMessage);
+          chatContainer.scrollTop = chatContainer.scrollHeight;
+      })
+      .catch(error => {
+          const errorMessage = document.createElement("div");
+          errorMessage.classList.add("message", "bot-message");
+          errorMessage.innerHTML = `<i class="fas fa-exclamation-circle"></i> Request failed: ${error}`;
+          errorMessage.style.color = "red";
+          chatContainer.appendChild(errorMessage);
+      });
+
+      document.getElementById("prompt").value = "";
+  }
+</script>
+
+<style>
+  .message {
+      margin: 10px 0;
+      padding: 10px;
+      border-radius: 5px;
+      position: relative;
+      max-width: 70%;
+      clear: both;
+  }
+
+  .user-message {
+      background-color: #007bff;
+      color: white;
+      margin-left: auto;
+      text-align: left;
+  }
+
+  .bot-message {
+      background-color: #e2e2e2;
+      color: black;
+      margin-right: auto;
+      text-align: left;
+  }
+
+  .message i {
+      position: absolute;
+      left: 10px;
+      top: 10px;
+      font-size: 18px;
+  }
+</style>
+
+ 
+
+
+
+<script>
+// $(document).ready(function() {
+//     $('#translation-form').on('submit', function(e) {
+//         e.preventDefault();
+//         var form = $(this);
+//         var retryCount = 0; // Initialize a retry counter
+//         var maxRetries = 5; // Set the maximum number of retries
+
+//         function makeRequest() {
+//             $.ajax({
+//                 type: 'POST',
+//                 url: form.attr('action'),
+//                 data: form.serialize(),
+//                 success: function(response) {
+//                     $('#alert-container').html(`
+//                         <div class="alert alert-success" role="alert">
+//                             Translation successful! Translated text: ${response.translated_text}
+//                         </div>
+//                     `);
+//                     form[0].reset();
+//                 },
+//                 error: function(xhr, status, error) {
+//                     console.error('AJAX Error:', status, error, xhr.responseText);
+
+//                     if (xhr.responseText.includes('currently loading') && retryCount < maxRetries) {
+//                         retryCount++;
+//                         console.log(`Retrying... (${retryCount}/${maxRetries})`);
+//                         setTimeout(makeRequest, 2000); // Wait for 2 seconds before retrying
+//                     } else {
+//                         $('#alert-container').html(`
+//                             <div class="alert alert-danger" role="alert">
+//                                 There was an error processing your request! Please try again.
+//                             </div>
+//                         `);
+//                     }
+//                 }
+//             });
+//         }
+
+//         makeRequest(); // Initial request
+//     });
+// });
+</script>
+
+
+      <section class="popular" id="destination">
+        <div class="container">
+
+          <p class="section-subtitle">Uncover place</p>
+
+          <h2 class="h2 section-title">Popular destination</h2>
+
+          <p class="section-text">
+            Fusce hic augue velit wisi quibusdam pariatur, iusto primis, nec nemo, rutrum. Vestibulum cumque laudantium.
+            Sit ornare
+            mollitia tenetur, aptent.
+          </p>
+
+          <ul class="popular-list">
+
+            <li>
+              <div class="popular-card">
+
+                <figure class="card-img">
+                  <img src="{% static 'assets/images/popular-1.jpg' %}" alt="San Miguel, Italy" loading="lazy">
+                </figure>
+
+                <div class="card-content">
+
+                  <div class="card-rating">
+                    <ion-icon name="star"></ion-icon>
+                    <ion-icon name="star"></ion-icon>
+                    <ion-icon name="star"></ion-icon>
+                    <ion-icon name="star"></ion-icon>
+                    <ion-icon name="star"></ion-icon>
+                  </div>
+
+                  <p class="card-subtitle">
+                    <a href="#">Italy</a>
+                  </p>
+
+                  <h3 class="h3 card-title">
+                    <a href="#">San miguel</a>
+                  </h3>
+
+                  <p class="card-text">
+                    Fusce hic augue velit wisi ips quibusdam pariatur, iusto.
+                  </p>
+
+                </div>
+
+              </div>
+            </li>
+
+            <li>
+              <div class="popular-card">
+
+                <figure class="card-img">
+                  <img src="{% static 'assets/images/popular-2.jpg' %}" alt="Burj Khalifa, Dubai" loading="lazy">
+                </figure>
+
+                <div class="card-content">
+
+                  <div class="card-rating">
+                    <ion-icon name="star"></ion-icon>
+                    <ion-icon name="star"></ion-icon>
+                    <ion-icon name="star"></ion-icon>
+                    <ion-icon name="star"></ion-icon>
+                    <ion-icon name="star"></ion-icon>
+                  </div>
+
+                  <p class="card-subtitle">
+                    <a href="#">Dubai</a>
+                  </p>
+
+                  <h3 class="h3 card-title">
+                    <a href="#">Burj khalifa</a>
+                  </h3>
+
+                  <p class="card-text">
+                    Fusce hic augue velit wisi ips quibusdam pariatur, iusto.
+                  </p>
+
+                </div>
+
+              </div>
+            </li>
+
+            <li>
+              <div class="popular-card">
+
+                <figure class="card-img">
+                  <img src="{% static 'assets/images/popular-3.jpg' %}" alt="Kyoto Temple, Japan" loading="lazy">
+                </figure>
+
+                <div class="card-content">
+
+                  <div class="card-rating">
+                    <ion-icon name="star"></ion-icon>
+                    <ion-icon name="star"></ion-icon>
+                    <ion-icon name="star"></ion-icon>
+                    <ion-icon name="star"></ion-icon>
+                    <ion-icon name="star"></ion-icon>
+                  </div>
+
+                  <p class="card-subtitle">
+                    <a href="#">Japan</a>
+                  </p>
+
+                  <h3 class="h3 card-title">
+                    <a href="#">Kyoto temple</a>
+                  </h3>
+
+                  <p class="card-text">
+                    Fusce hic augue velit wisi ips quibusdam pariatur, iusto.
+                  </p>
+
+                </div>
+
+              </div>
+            </li>
+
+          </ul>
+
+          <button class="btn btn-primary">More destintion</button>
+
+        </div>
+      </section>
+
+
+<!-- emna -->
+ <!-- emna -->
+
+ <section class="feedback-section">
+  <div class="container">
+    <h2 class="section-title">Leave Your Feedback</h2>
+    <div class="feedback-card">
+      <form id="feedback-form" method="POST" class="feedback-form">
+        {% csrf_token %}
+        
+        <div class="input-wrapper">
+          <label for="utilisateur" class="input-label">Your Name*</label>
+          <input type="text" name="utilisateur" id="utilisateur" required 
+            placeholder="Enter Your Name" class="input-field" aria-label="Your Name">
+        </div>
+
+        <div class="input-wrapper">
+          <label for="destination" class="input-label">Your Destination*</label>
+          <input type="text" name="destination" id="destination" required 
+            placeholder="Enter Your Destination" class="input-field" aria-label="Your Destination">
+        </div>
+
+        <div class="input-wrapper">
+          <label for="commentaire" class="input-label">Your Comment*</label>
+          <textarea name="commentaire" id="commentaire" required 
+            placeholder="Enter Your Comment" class="input-field" aria-label="Your Comment"></textarea>
+        </div>
+
+        <div class="input-wrapper">
+          <label for="note" class="input-label">Rating*</label>
+          <select name="note" id="note" required class="input-field" aria-label="Rating">
+            <option value="">Select a rating</option>
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+          </select>
+        </div>
+
+        <div class="button-group">
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+      </form>
+    </div>
+
+    <div id="alert-container_sentiment" style="margin-top: 20px;"></div>
+  </div>
+</section>
+
+<style>
+.feedback-section {
+background: #f9f9f9;
+padding: 40px 20px;
+}
+
+.feedback-card {
+background: white;
+border-radius: 10px;
+padding: 30px;
+box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.input-wrapper {
+margin-bottom: 20px;
+}
+
+.input-label {
+font-weight: bold;
+margin-bottom: 5px;
+display: block;
+}
+
+.input-field {
+width: 100%;
+padding: 12px;
+border: 2px solid #ccc;
+border-radius: 5px;
+font-size: 16px;
+transition: border-color 0.3s;
+}
+
+.input-field:focus {
+border-color: #007bff;
+outline: none;
+}
+
+.btn-primary {
+background: #007bff;
+color: white;
+padding: 12px 20px;
+border: none;
+border-radius: 5px;
+cursor: pointer;
+transition: background 0.3s;
+}
+
+.btn-primary:hover {
+background: #0056b3;
+}
+
+.alert-container {
+margin-top: 20px;
+padding: 15px;
+border-radius: 5px;
+display: none; /* Initially hidden */
+}
+
+.alert-success {
+background-color: #e8f9e9;
+color: #2e7d32;
+border-left: 4px solid #4caf50;
+}
+
+.alert-danger {
+background-color: #f8d7da;
+color: #721c24;
+border-left: 4px solid #f44336;
+}
+</style>
+
+<!-- Place this script at the bottom of the page -->
+<script src="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.0.0/js/all.min.js" crossorigin="anonymous"></script>
+<!-- Font Awesome -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- jQuery -->
+
+<script>
+$(document).ready(function () {
+$('#feedback-form').on('submit', function (e) {
+  e.preventDefault();
+
+  var form = $(this);
+  console.log(form.serialize());
+
+  $.ajax({
+    type: 'POST',
+    url: '/sentiment_analysis_view/', // Correct 'path' to 'url'
+    data: form.serialize(),
+    success: function (response) {
+      let emoji, alertClass, message;
+
+      console.log(response);
+
+      switch (response.sentiment) {
+        case 'LABEL_0':
+          emoji = '😞'; // Negative
+          alertClass = 'alert-danger';
+          message = 'We are sorry you had a negative experience.';
+          break;
+        case 'LABEL_1':
+          emoji = '😐'; // Neutral
+          alertClass = 'alert-warning';
+          message = 'Your feedback is valuable to us.';
+          break;
+        case 'LABEL_2':
+        default:
+          emoji = '😊'; // Positive
+          alertClass = 'alert-success';
+          message = 'Thrilled you had a positive experience!';
+          break;
+      }
+
+      let score = response.score;
+      let formattedScore = typeof score === 'number' ? score.toFixed(2) : 'N/A';
+
+      $('#alert-container_sentiment').html(`
+        <div class="alert ${alertClass}" role="alert">
+          <span style="font-size: 2rem;">${emoji}</span><br>
+          <strong>${message}</strong><br>
+          Sentiment Score: ${formattedScore}
+        </div>
+      `).fadeIn();
+
+      form[0].reset();
+    },
+    error: function (xhr) {
+      $('#alert-container').html(`
+        <div class="alert alert-danger" role="alert">
+          <strong>Error!</strong> ${xhr.responseText || 'Please try again.'}
+        </div>
+      `).fadeIn();
+    }
+  });
+});
+});
+</script>
+
+
+
+
+
+</style>
+
+
+
+      <!-- 
+        - #PACKAGE
+      -->
+
+      <section class="package" id="package">
+        <div class="container">
+            <p class="section-subtitle">Popular Activities</p>
+            <h2 class="h2 section-title">Checkout Our Activities</h2>
+            <p class="section-text">
+                Discover a variety of activities tailored just for you.
+            </p>
+    
+            <ul class="package-list">
+                {% for activity in activities %}
+                <li>
+                    <div class="package-card" data-activity-id="{{ activity.id }}" data-price="{{ activity.cout }}">
+                        <figure class="card-banner">
+                            <img src="{{ activity.image.url }}" alt="{{ activity.nom }}" loading="lazy">
+                        </figure>
+    
+                        <div class="card-content">
+                            <h3 class="h3 card-title">{{ activity.nom }}</h3>
+                            <p class="card-text">{{ activity.adresse }}</p>
+                            <p class="card-caption">{{ activity.caption }}</p>
+    
+                            <!-- Tags Section -->
+                            <div class="card-tags" id="tags-{{ activity.id }}">
+                                <!-- Tags will be dynamically populated here -->
+                            </div>
+    
+                            <ul class="card-meta-list">
+                                <li class="card-meta-item">
+                                    <div class="meta-box">
+                                        <ion-icon name="time"></ion-icon>
+                                        <p class="text">{{ activity.duree }} {{ activity.duree|pluralize:"day,days" }}</p>
+                                    </div>
+                                </li>
+                                <li class="card-meta-item">
+                                    <div class="meta-box">
+                                        <ion-icon name="people"></ion-icon>
+                                        <p class="text">pax: {{ activity.pax }}</p>
+                                    </div>
+                                </li>
+                                <li class="card-meta-item">
+                                    <div class="meta-box">
+                                        <ion-icon name="location"></ion-icon>
+                                        <p class="text">{{ activity.adresse }}</p>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+    
+                        <div class="card-price">
+                            <div class="wrapper">
+                                <p class="reviews">(0 reviews)</p> <!-- Replace with dynamic reviews if needed -->
+                                <div class="card-rating">
+                                    <ion-icon name="star"></ion-icon>
+                                    <ion-icon name="star"></ion-icon>
+                                    <ion-icon name="star"></ion-icon>
+                                    <ion-icon name="star"></ion-icon>
+                                    <ion-icon name="star"></ion-icon>
+                                </div>
+                            </div>
+                            <p class="price">
+                                €{{ activity.cout }}
+                                <span>/ per person</span>
+                            </p>
+                            <button class="btn btn-secondary">Book Now</button>
+                        </div>
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </section>
+
+    <script>
+document.addEventListener("DOMContentLoaded", function() {
+    const packageCards = document.querySelectorAll(".package-card");
+    const baseUrl = window.location.origin; // Get the base URL of the site
+
+    packageCards.forEach(card => {
+        const activityId = card.getAttribute("data-activity-id");
+        const imageUrl = card.querySelector("img").getAttribute("src"); // Prepend base URL
+        let relativeImagePath = imageUrl.replace(/^\/+/, '');
+        const activityName = card.querySelector(".card-title").textContent;
+        const priceElement = card.querySelector(".price");
+        const priceText = priceElement ? priceElement.textContent : ""; // Get the full text
+        const price = priceText.replace('€', '').trim(); // Remove Euro sign and trim whitespace
+        
+        // Take only the first part before any spaces
+        const cleanedPrice = price.split(' ')[0].trim(); // Get price directly from data attribute
+
+        // Debugging output
+        console.log(`Activity ID: ${activityId}`);
+        console.log(`Image URL: ${imageUrl}`);
+        console.log(`Activity Name: ${activityName}`);
+        console.log(`Price: ${price}`); // Log price before calling trim
+        console.log('Relative Image Path:', relativeImagePath);
+        
+        if (relativeImagePath.startsWith('media/')) {
+          relativeImagePath = relativeImagePath.replace('media/', '');
+        }
+
+        console.log(`/generate-activity-tags/?image_path=${encodeURIComponent(relativeImagePath)}&activity_name=${encodeURIComponent(card.querySelector(".card-title").textContent)}&price=${encodeURIComponent(cleanedPrice)}`)
+        
+
+        if (price) { // Check if price is not null or undefined
+            const trimmedPrice = price.trim(); // Only trim if price is valid
+
+            // Fetch tags for each activity
+          fetch(`/generate-activity-tags/?image_path=${encodeURIComponent(relativeImagePath)}&activity_name=${encodeURIComponent(card.querySelector(".card-title").textContent)}&price=${encodeURIComponent(cleanedPrice)}`)
+            .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log(data); 
+                    const tagsContainer = document.getElementById(`tags-${activityId}`);
+                    if (data.tags) {
+                        tagsContainer.innerHTML = "";  // Clear any existing tags
+                        data.tags.forEach(tag => {
+                            const tagElement = document.createElement("span");
+                            tagElement.classList.add("tag");
+                            tagElement.textContent = tag;
+                            tagsContainer.appendChild(tagElement);
+                        });
+                    } else {
+                        tagsContainer.textContent = "No tags found";
+                    }
+                })
+                .catch(error => console.error('Error fetching tags:', error));
+        } else {
+            console.error(`Price is missing for Activity ID: ${activityId}`);
+        }
+    });
+});
+</script>
+
+
+
+
+
+
+      <!-- 
+        - #GALLERY
+      -->
+
+      <section class="gallery" id="gallery">
+        <div class="container">
+
+          <p class="section-subtitle">Photo Gallery</p>
+
+          <h2 class="h2 section-title">Photo's From Travellers</h2>
+
+          <p class="section-text">
+            Fusce hic augue velit wisi quibusdam pariatur, iusto primis, nec nemo, rutrum. Vestibulum cumque laudantium.
+            Sit ornare
+            mollitia 
+          </p>
+
+          <ul class="gallery-list">
+
+            <li class="gallery-item">
+                <figure class="gallery-image">
+                    <img src="{% static 'assets/images/gallery-1.jpg' %}" alt="Gallery image">
+                </figure>
+            </li>
+        
+            <li class="gallery-item">
+                <figure class="gallery-image">
+                    <img src="{% static 'assets/images/gallery-2.jpg' %}" alt="Gallery image">
+                </figure>
+            </li>
+        
+            <li class="gallery-item">
+                <figure class="gallery-image">
+                    <img src="{% static 'assets/images/gallery-3.jpg' %}" alt="Gallery image">
+                </figure>
+            </li>
+        
+            <li class="gallery-item">
+                <figure class="gallery-image">
+                    <img src="{% static 'assets/images/gallery-4.jpg' %}" alt="Gallery image">
+                </figure>
+            </li>
+        
+            <li class="gallery-item">
+                <figure class="gallery-image">
+                    <img src="{% static 'assets/images/gallery-5.jpg' %}" alt="Gallery image">
+                </figure>
+            </li>
+        
+        </ul>
+        
+
+        </div>
+      </section>
+       <!-- 
+        - #Recommendation
+      -->
+      <section class="gallery" id="recommendation">
+        <div class="container">
+
+          <!-- <p class="section-subtitle">Photo Gallery</p> -->
+
+          <h1>Select a Country</h1>
+    <form action="#" method="POST" class="tour-search-form" id="profile-form">
+        {% csrf_token %}
+        <select name="country" id="country">
+            {% for country in countries %}
+                <option value="{{ country }}">{{ country }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit" class="btn btn-secondary">Submit</button>
+    </form>
+
+    {% if foodR %}
+    <h2>Famous Dishe:</h2>
+    <ul>
+        
+            <li>{{ foodR }}</li>
+        
+    </ul>
+    <h3>Image:</h3>
+    <img src="{% static 'images/' %}{{ imageF }}" alt="Food Image">
+    {% endif %}
+        
+          </div>
+      </section>
+         <!-- 
+        - #Profile
+      -->
+
+      <section class="gallery" id="profile">
+        <div class="container">
+
+          <!-- <p class="section-subtitle">Photo Gallery</p> -->
+
+          <h2 class="h2 section-title">Profile</h2>
+          <form id="profile-form" method="POST" action="/profile/" class="tour-search-form">
+            {% csrf_token %}
+            
+            <div class="input-wrapper">
+                <label for="username" class="input-label">Your Name*</label>
+                <input type="text" name="username" id="username" required placeholder="Enter Your Name" class="input-field" aria-label="Your Name" value="{{user.username}}">
+            </div>
+
+            <div class="input-wrapper">
+              <label for="date_of_birth" class="input-label">Your Date of birth</label>
+              <input type="date" name="date_of_birth" id="date_of_birth" required placeholder="Your Date of birth" class="input-field" aria-label="Your Date of birth" value="{{formatted_date}}">
+          </div>
+
+          <div class="input-wrapper">
+            <label for="phone_number" class="input-label">Your Phone Number</label>
+            <input type="text" name="phone_number" id="phone_number" placeholder="Your Phone Number" class="input-field" aria-label="Your Phone Number" pattern="[0-9]+" value="{{user.phone_number}}"  required/>
+          </div>
+          <div class="input-wrapper">
+            <label for="address" class="input-label">Your address*</label>
+            <input type="text" name="address" id="address" required placeholder="Enter Your Address" class="input-field" aria-label="Your Address" value="{{user.address}}">
+        </div>
+            
+            <div class="input-wrapper">
+                <label for="email" class="input-label">Your Email*</label>
+                <input type="email" name="email" id="email" required placeholder="Enter Your Email" class="input-field" aria-label="Your Email" value="{{user.email}}">
+            </div>
+            
+            <div class="input-wrapper">
+              <label for="password" class="input-label">Password</label>
+              <input type="password" name="password" id="password"  placeholder="Enter Your Password" class="input-field" aria-label="Your Password" >
+          </div>
+          
+      
+            
+            
+            
+            <div class="button-group"> <!-- Grouped buttons for better layout -->
+                
+                <button type="submit" class="btn btn-secondary">Modify</button>
+            </div>
+        </form>
+       
+        </div>
+      </section>
+
+
+
+<!-- hehdi reclamation  -->
+
+<section>
+  <div class="container">
+      <h2 class="section-title">Reclamation</h2>
+      <form id="translation-form" method="POST" action="{% url 'translation' %}" class="translation-form">
+          {% csrf_token %}
+    
+          <div class="input-wrapper">
+              <label for="texte_source" class="input-label">Your reclamation text</label>
+              <input type="textarea" name="texte_source" id="texte_source" required placeholder="Enter reclamation to translate" class="input-field" aria-label="Source Text" >
+          </div>
+    
+          <!-- <div class="input-wrapper">
+              <label for="langue_cible" class="input-label">Target Language</label>
+              <select name="langue_cible" id="langue_cible" required class="input-field" aria-label="Target Language">
+                  <option value="">Select Language</option>
+                  <option value="en">English</option>
+                  <option value="fr">French</option>
+                  <option value="es">Spanish</option>
+              </select>
+          </div> -->
+    
+          <div class="button-group">
+              <button type="submit" class="btn btn-secondary">Translate</button>
+          </div>
+
+          <div class="text-center">
+              <button id="showTranslationBtn" class="btn btn-primary" data-toggle="modal" data-target="#translationModal" style="display: none;">
+                  Show Translation
+              </button>
+          </div>
+          
+          <!-- Bootstrap Modal -->
+          <div class="modal fade" id="translationModal" tabindex="-1" role="dialog" aria-labelledby="translationModalLabel" aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                      <div class="modal-header">
+                          <h5 class="modal-title" id="translationModalLabel">Translation Result</h5>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                          </button>
+                      </div>
+                      <div class="modal-body">
+                          <p id="translatedText" class="text-center"></p>
+                      </div>
+                      <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </form>
+      <div id="alert-container-translate"></div>
+  </div>
+</section>
+
+<style>
+  .section-title {
+      text-align: center;
+      font-size: 2em;
+      margin-bottom: 20px;
+  }
+
+  .input-wrapper {
+      margin-bottom: 15px;
+  }
+
+  .input-label {
+      font-weight: bold;
+  }
+
+  .input-field {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+  }
+
+  .button-group {
+      display: flex;
+      justify-content: center; /* Centers button */
+      margin-top: 20px;
+  }
+
+  .alert {
+      margin-top: 20px;
+      text-align: center;
+  }
+</style>
+
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script>
+$(document).ready(function() {
+  $('#translation-form').on('submit', function(e) {
+      e.preventDefault();
+      var form = $(this);
+
+      $.ajax({
+          type: 'POST',
+          url: form.attr('action'),
+          data: form.serialize(),
+          success: function(response) {
+            alert("reclamation a ete envoye")
+              // $('#translatedText').text(response.translated_text);
+              // $('#showTranslationBtn').click(); // Show the modal
+              // form[0].reset();
+          },
+          error: function(xhr, status, error) {
+              console.error('AJAX Error:', status, error, xhr.responseText);
+              $('#alert-container-tanslate').html(`
+                  <div class="alert alert-danger" role="alert">
+                      There was an error processing your request! Please try again.
+                  </div>
+              `);
+          }
+      });
+  });
+});
+</script>
+ 
+      
+      <!-- 
+        - #CTA
+      -->
+
+      <section class="cta" id="contact">
+        <div class="container">
+
+          <div class="cta-content">
+            <p class="section-subtitle">Call To Action</p>
+
+            <h2 class="h2 section-title">Ready For Unforgatable Travel. Remember Us!</h2>
+
+            <p class="section-text">
+              Fusce hic augue velit wisi quibusdam pariatur, iusto primis, nec nemo, rutrum. Vestibulum cumque
+              laudantium. Sit ornare
+              mollitia tenetur, aptent.
+            </p>
+          </div>
+
+          <button class="btn btn-secondary">Contact Us !</button>
+
+        </div>
+      </section>
+
+    </article>
+  </main>
+
+
+
+
+
+  <!-- 
+    - #FOOTER
+  -->
+
+  <footer class="footer">
+
+    <div class="footer-top">
+      <div class="container">
+
+        <div class="footer-brand">
+
+          <a href="#" class="logo">
+            <img src="{% static 'assets/images/logo.svg' %}" alt="Tourly logo">
+          </a>
+
+          <p class="footer-text">
+            Urna ratione ante harum provident, eleifend, vulputate molestiae proin fringilla, praesentium magna conubia
+            at
+            perferendis, pretium, aenean aut ultrices.
+          </p>
+
+        </div>
+
+        <div class="footer-contact">
+
+          <h4 class="contact-title">Contact Us</h4>
+
+          <p class="contact-text">
+            Feel free to contact and reach us !!
+          </p>
+
+          <ul>
+
+            <li class="contact-item">
+              <ion-icon name="call-outline"></ion-icon>
+
+              <a href="tel:+01123456790" class="contact-link">+01 (123) 4567 90</a>
+            </li>
+
+            <li class="contact-item">
+              <ion-icon name="mail-outline"></ion-icon>
+
+              <a href="mailto:info.tourly.com" class="contact-link">info.tourly.com</a>
+            </li>
+
+            <li class="contact-item">
+              <ion-icon name="location-outline"></ion-icon>
+
+              <address>3146 Koontz, California</address>
+            </li>
+
+          </ul>
+
+        </div>
+
+        <div class="footer-form">
+
+          <p class="form-text">
+            Subscribe our newsletter for more update & news !!
+          </p>
+
+          <form action="" class="form-wrapper">
+            <input type="email" name="email" class="input-field" placeholder="Enter Your Email" required>
+
+            <button type="submit" class="btn btn-secondary">Subscribe</button>
+          </form>
+
+        </div>
+
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div class="container">
+
+        <p class="copyright">
+          &copy; 2022 <a href="">codewithsadee</a>. All rights reserved
+        </p>
+
+        <ul class="footer-bottom-list">
+
+          <li>
+            <a href="#" class="footer-bottom-link">Privacy Policy</a>
+          </li>
+
+          <li>
+            <a href="#" class="footer-bottom-link">Term & Condition</a>
+          </li>
+
+          <li>
+            <a href="#" class="footer-bottom-link">FAQ</a>
+          </li>
+
+        </ul>
+
+      </div>
+    </div>
+
+  </footer>
+
+
+
+
+
+  <!-- 
+    - #GO TO TOP
+  -->
+
+  <a href="#top" class="go-top" data-go-top>
+    <ion-icon name="chevron-up-outline"></ion-icon>
+  </a>
+
+
+
+  <script>
+    // Function to display alert messages
+    function showAlert(message) {
+        alert(message);
+    }
+</script>
+
+
+
+  <!-- 
+    - custom js link
+  -->
+  <script src="{% static 'assets/js/script.js' %}"></script>
+
+  <!-- 
+    - ionicon link
+  -->
+  <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+
+</body>
+
+</html>
