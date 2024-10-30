@@ -19,12 +19,19 @@ from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
 from reservations.views import front_view, get_image_for_destination, get_reservations  
+from traductions.views import translation_view,get_translations
 from reservations import views  
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('front/', front_view, name='front'),  # Route for the main view
     path('get-image-for-destination/', get_image_for_destination, name='get_image_for_destination'),  # Route for image generation
+    path('translation_view/', translation_view, name='translation'),  # Route for image generation
+ path('translation/', get_translations, name='translationt'),  # Route for image generation
+
+    
+    # path('get-reclamationt/', get_reclamationt, name='get_reclamationt'),
+
     path('get-reservations/', get_reservations, name='get_reservations'),  # Route for fetching reservations
     path('delete-reservation/<int:reservation_id>/', views.delete_reservation, name='delete_reservation'),
 

@@ -73,6 +73,7 @@ def front_view(request):
                 return JsonResponse({'success': False, 'message': str(e)})
 
     return render(request, 'index.html')
+
 def get_reservations(request):
     if request.method == 'GET' and request.headers.get('x-requested-with') == 'XMLHttpRequest':
         reservations = Reservation.objects.all()
