@@ -11,85 +11,93 @@ headers = {"Authorization": f"Bearer {API_TOKEN}"}
 
 
 def get_image_tags(image_path):
-    with open(image_path, "rb") as image_file:
-        img_data = base64.b64encode(image_file.read()).decode("utf-8")
-        payload = {
-            "parameters": {"candidate_labels": ["outdoor", "adventure", "relaxation", "sport", "water", "nature"]},
-            "inputs": img_data
-        }
-        for attempt in range(5):
-            response = requests.post(
-                "https://api-inference.huggingface.co/models/openai/clip-vit-large-patch14",
-                headers=headers,
-                json=payload
-            )
-            if response.status_code == 200:
-                output = response.json()
-                
-                # Log the structure of `output` to understand it
-                print("Received output from API:", output)
-                
-                # Adjust processing based on the response structure
-                if isinstance(output, list):
-                    return [item.get("label") for item in output if "label" in item]
-                elif isinstance(output, dict) and "labels" in output:
-                    return [label["label"] for label in output["labels"]]
-                else:
-                    print("Unexpected output format:", output)
-                    return []
+    try:
+        with open(image_path, "rb") as f:
+            img = f.read()
+    except Exception as e:
+        print(f"Error reading image: {e}")
+        return []
 
-            elif response.status_code == 503:
-                print(f"Model loading, retrying in {attempt + 1} seconds...")
-                time.sleep(attempt + 1)
-            else:
-                print("Error:", response.json())
-                return []
+    # Prepare the payload with base64-encoded image data
+    payload = {
+        "parameters": {
+            "candidate_labels": [
+                "landscape", "water", "sunset", "mountains",
+                "ocean", "forest",
+                "hiking", "biking", "exploration"
+            ]
+        },
+        "inputs": base64.b64encode(img).decode("utf-8")
+    }
 
-    print("Failed to get image tags after multiple attempts.")
+    # Attempt to query the API with retries for 5 attempts
+    for attempt in range(5):
+        response = requests.post("https://api-inference.huggingface.co/models/openai/clip-vit-large-patch14", headers=headers, json=payload)
+        
+        if response.status_code == 200:
+            output = response.json()
+            print("API Response Output:", output)  # For debugging
+            # Extract tags based on confidence scores
+            tags = [item['label'] for item in output if item['score'] > 0.1]
+            return tags
+        elif response.status_code == 400:
+            print(f"Bad Request: {response.json()}")  # Log detailed error message
+            return []
+        elif response.status_code == 503:
+            time.sleep(attempt + 1)  # Exponential backoff for 503 errors
+        else:
+            print(f"Error: Received status code {response.status_code}")  # Log any other errors
+            return []
+
     return []
 
 
 
 
 def get_text_tags(activity_name):
-    # Define your API URL and headers inside the function
-    API_URL = "https://api-inference.huggingface.co/models/sentence-transformers/all-MiniLM-L6-v2"
-
-    # Construct the input for the API
+    # Construct the payload for the API request
     payload = {
-        "inputs": {
-            "source_sentence": activity_name,
-            "sentences": [
-                "outdoor adventure", "nature activity", "relaxing experience", "extreme sports", "water activity"
+        "inputs": activity_name,
+        "parameters": {
+            "candidate_labels": [
+                "adventure", "outdoor", "fitness",
+                "family-friendly", "solo", "fun", "exciting",
+                "cultural", "educational"
             ]
+
         }
     }
     
-    # Send the request to the API
-    response = requests.post(API_URL, headers=headers, json=payload)
+    # Make the API request
+    response = requests.post("https://api-inference.huggingface.co/models/facebook/bart-large-mnli", headers=headers, json=payload)
     
-    # Check for successful response
+    # Check the status of the response
     if response.status_code == 200:
-        output = response.json()
-        
-        # Log the structure of `output` to understand it
-        print("Received output from API for text tags:", output)
-        
-        # Adjust processing based on the response structure
-        if isinstance(output, list) and all(isinstance(item, dict) for item in output):
-            # Sort output by score if it is a list of dictionaries
-            sorted_output = sorted(output, key=lambda x: x.get("score", 0), reverse=True)
-            return [item["label"] for item in sorted_output if "label" in item]
-        elif isinstance(output, list):
-            # If it is a list of floats or other unexpected format, log it
-            print("Unexpected list format in output:", output)
-            return []
-        else:
-            print("Unexpected output format:", output)
-            return []
+        try:
+            output = response.json()  # Parse JSON response
+            print("API Response Output:", output)  # Log the actual response
+            
+            # Extract labels and scores
+            labels = output.get("labels", [])
+            scores = output.get("scores", [])
 
-    print("Error:", response.json())
-    return []
+            # Pair labels with their corresponding scores
+            combined = [{"label": label, "score": score} for label, score in zip(labels, scores)]
+            
+            # Sort the combined list based on scores in descending order
+            sorted_output = sorted(combined, key=lambda x: x["score"], reverse=True)
+
+            # Filter labels based on a score threshold (e.g., 0.2)
+            return [item["label"] for item in sorted_output if item["score"] > 0.15]
+
+        except ValueError:
+            print("Error parsing JSON response")
+            return []
+    else:
+        print(f"API error: {response.status_code} - {response.text}")
+        return []
+
+
 
 
 def generate_image_caption(image_path):
