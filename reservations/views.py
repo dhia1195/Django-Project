@@ -15,9 +15,7 @@ from user_client.models import User_client
 from django.views.decorators.csrf import csrf_exempt
 import json
 import re
-from transformers import BlenderbotTokenizer, BlenderbotForConditionalGeneration
 import time
-
 from django.views.decorators.http import require_POST
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
