@@ -729,35 +729,46 @@ function deleteReservation(reservationId, listItem) {
 
 
 <script>
-  
 $(document).ready(function() {
-  $('#translation-form').on('submit', function(e) {
-      e.preventDefault();
-      var form = $(this);
+    $('#translation-form').on('submit', function(e) {
+        e.preventDefault();
+        var form = $(this);
+        var retryCount = 0; // Initialize a retry counter
+        var maxRetries = 5; // Set the maximum number of retries
 
-      $.ajax({
-          type: 'POST',
-          url: form.attr('action'),
-          data: form.serialize(),
-          success: function(response) {
-              $('#alert-container').html(`
-                  <div class="alert alert-success" role="alert">
-                      Translation successful! Translated text: ${response.translated_text}
-                  </div>
-              `);
+        function makeRequest() {
+            $.ajax({
+                type: 'POST',
+                url: form.attr('action'),
+                data: form.serialize(),
+                success: function(response) {
+                    $('#alert-container').html(`
+                        <div class="alert alert-success" role="alert">
+                            Translation successful! Translated text: ${response.translated_text}
+                        </div>
+                    `);
+                    form[0].reset();
+                },
+                error: function(xhr, status, error) {
+                    console.error('AJAX Error:', status, error, xhr.responseText);
 
-              form[0].reset();
-          },
-          error: function(xhr, status, error) {
-              console.error('AJAX Error:', status, error, xhr.responseText);
-              $('#alert-container').html(`
-                  <div class="alert alert-danger" role="alert">
-                      There was an error processing your request! Please try again.
-                  </div>
-              `);
-          }
-      });
-  });
+                    if (xhr.responseText.includes('currently loading') && retryCount < maxRetries) {
+                        retryCount++;
+                        console.log(`Retrying... (${retryCount}/${maxRetries})`);
+                        setTimeout(makeRequest, 2000); // Wait for 2 seconds before retrying
+                    } else {
+                        $('#alert-container').html(`
+                            <div class="alert alert-danger" role="alert">
+                                There was an error processing your request! Please try again.
+                            </div>
+                        `);
+                    }
+                }
+            });
+        }
+
+        makeRequest(); // Initial request
+    });
 });
 </script>
 
