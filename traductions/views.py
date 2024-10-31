@@ -12,7 +12,7 @@ from langdetect import detect, DetectorFactory
 #     "fr": "https://api-inference.huggingface.co/models/Helsinki-NLP/opus-mt-fr-en",
 #     "es": "https://api-inference.huggingface.co/models/Helsinki-NLP/opus-mt-es-en"
 # }
-HEADERS = {"Authorization": "Bearer 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"}
+HEADERS = {"Authorization": "Bearer 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"}
 
 @csrf_exempt
 # Set a seed for the random number generator to make the results deterministic

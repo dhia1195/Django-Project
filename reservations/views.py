@@ -31,7 +31,7 @@ logger = logging.getLogger(__name__)
 API_URL = "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-2-1"
 API_URL2 = "https://api-inference.huggingface.co/models/google/flan-t5-large"
 API_URL3 = "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-2-1-base"
-HEADERS = {"Authorization": "Bearer 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"}
+HEADERS = {"Authorization": "Bearer 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"}
 
 
 def queryFood(payload):
